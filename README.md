@@ -1,3 +1,23 @@
+# Collective state machines: Experiments
+
+## Experiment 1
+
+GOAL: 
+
+RUN WITH: `./gradlew TODO`
+
+EXPLANATION OF DYNAMICS
+
+- After start (`p` key) and recentering the system (with mouse and alt+scroll), XXX should appear
+
+CONTENT:
+
+- `/src/main/scala/TODO`
+
+
+
+---
+
 # Alchemist Experiments Bootstrap
 
 A customized Alchemist Primer with releases and data analysis ready.
