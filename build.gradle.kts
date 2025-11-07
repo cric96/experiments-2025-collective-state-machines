@@ -1,12 +1,9 @@
 import org.gradle.configurationcache.extensions.capitalized
-import java.awt.GraphicsEnvironment
 import java.io.ByteArrayOutputStream
 
 plugins {
     application
-    alias(libs.plugins.gitSemVer)
-    alias(libs.plugins.kotlin.jvm)
-    alias(libs.plugins.kotlin.qa)
+    scala
     alias(libs.plugins.multiJvmTesting)
     alias(libs.plugins.taskTree)
 }
@@ -14,17 +11,6 @@ plugins {
 repositories {
     mavenCentral()
 }
-/*
- * Only required if you plan to use Protelis, remove otherwise
- */
-sourceSets {
-    main {
-        resources {
-            srcDir("src/main/protelis")
-        }
-    }
-}
-
 val usesJvm: Int = File(File(projectDir, "docker/sim"), "Dockerfile")
     .readLines()
     .first { it.isNotBlank() }
@@ -35,15 +21,12 @@ val usesJvm: Int = File(File(projectDir, "docker/sim"), "Dockerfile")
     .toInt()
 
 multiJvm {
-    jvmVersionForCompilation.set(usesJvm)
+    jvmVersionForCompilation.set(17)
 }
 
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
-    implementation(libs.bundles.alchemist.protelis)
-    if (!GraphicsEnvironment.isHeadless()) {
-        implementation("it.unibo.alchemist:alchemist-swingui:${libs.versions.alchemist.get()}")
-    }
+    implementation(libs.bundles.alchemist)
 }
 
 // Heap size estimation for batches

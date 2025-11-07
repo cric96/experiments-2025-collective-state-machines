@@ -1,18 +1,13 @@
 [versions]
-alchemist = "42.2.5"
-kotlin = "2.2.0"
+alchemist = "42.3.16"
 
 [libraries]
 alchemist = { module = "it.unibo.alchemist:alchemist", version.ref = "alchemist" }
-alchemist-protelis = { module = "it.unibo.alchemist:alchemist-incarnation-protelis", version.ref = "alchemist" }
-alchemist-scafi = { module = "it.unibo.alchemist:alchemist-incarnation-scafi", version.ref = "alchemist" }
-
+alchemist-swingui = { module = "it.unibo.alchemist:alchemist-swingui", version.ref = "alchemist" }
+alchemist-incarnation-scafi = { module = "it.unibo.alchemist:alchemist-incarnation-scafi", version.ref = "alchemist"}
 [bundles]
-alchemist-protelis = [ "alchemist", "alchemist-protelis" ]
+alchemist = ["alchemist", "alchemist-incarnation-scafi", "alchemist-swingui"]
 
 [plugins]
-gitSemVer = { id = "org.danilopianini.git-sensitive-semantic-versioning", version = "5.1.7" }
-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
-kotlin-qa = { id = "org.danilopianini.gradle-kotlin-qa", version = "0.91.0" }
-multiJvmTesting = { id = "org.danilopianini.multi-jvm-test-plugin", version = "3.6.0" }
-taskTree = { id = "com.dorongold.task-tree", version = "4.0.1" }
+multiJvmTesting = "org.danilopianini.multi-jvm-test-plugin:4.3.2"
+taskTree = "com.dorongold.task-tree:4.0.1"
