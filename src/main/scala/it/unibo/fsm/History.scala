@@ -3,7 +3,7 @@ import scala.math.Ordering.Implicits.seqOrdering
 
 case class History[S: Ordering](initial: S, val states: List[State[S]] = List()) {
   def add(state: State[S]): History[S] = {
-    statespò.headOption match {
+    states.headOption match {
       case Some(oldHead) if oldHead.same(state) => this.copy(states = state :: states.tail)
       case Some(_) | None => this.copy(states = state :: states)
     }
@@ -13,7 +13,7 @@ case class History[S: Ordering](initial: S, val states: List[State[S]] = List())
     states.headOption.getOrElse(State(initial, Double.MinValue))
 
   override def toString: String = {
-    s"History(${(initial :: states.map(_.state)).reverse.mkString(" -> ")})"
+    s"History(${(states.map(_.state).appended(initial)).reverse.mkString(" -> ")})"
   }
 }
 

@@ -28,6 +28,7 @@ class ScafiProgram extends AggregateProgram
           workState
         }
     }
+    node.put("state", state)
 
   }
 }
