@@ -8,9 +8,30 @@ plugins {
     alias(libs.plugins.taskTree)
 }
 
+dependencies {
+    implementation(kotlin("stdlib-jdk8"))
+    implementation(libs.bundles.alchemist)
+    testImplementation("org.scalatest:scalatest_3:3.2.19")
+    testRuntimeOnly("org.junit.platform:junit-platform-engine:1.13.1")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher:1.13.1")
+    testRuntimeOnly("org.scalatestplus:junit-5-13_3:3.2.19.0")
+}
+
+tasks {
+    test {
+        useJUnitPlatform {
+            includeEngines("scalatest")
+            testLogging {
+                events("passed", "skipped", "failed")
+            }
+        }
+    }
+}
+
 repositories {
     mavenCentral()
 }
+
 val usesJvm: Int = File(File(projectDir, "docker/sim"), "Dockerfile")
     .readLines()
     .first { it.isNotBlank() }
@@ -72,6 +93,7 @@ File(rootProject.rootDir.path + "/src/main/yaml").listFiles()
             description = "Launches graphic simulation ${it.nameWithoutExtension}"
             mainClass.set("it.unibo.alchemist.Alchemist")
             classpath = sourceSets["main"].runtimeClasspath
+            jvmArgs("-Dsun.java2d.opengl=false")
             args("run", it.absolutePath)
             javaLauncher.set(
                 javaToolchains.launcherFor {
@@ -93,6 +115,7 @@ File(rootProject.rootDir.path + "/src/main/yaml").listFiles()
                 "launcher: { parameters: { batch: [], autoStart: false } }",
             )
         }
+
         runAllGraphic.dependsOn(graphic)
         val batch by basetask("run${capitalizedName}Batch") {
             description = "Launches batch experiments for $capitalizedName"

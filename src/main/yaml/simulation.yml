@@ -25,35 +25,20 @@ network-model:
   type: ConnectWithinDistance
   parameters: [0.5]
 
-_gradient: &gradient
+_program: &program
   - time-distribution: 1
     type: Event
     actions:
       - type: RunScafiProgram
-        parameters: [ it.unibo.program.ScafiProgram ]
+        parameters: [ it.unibo.program.ScafiProgram, 2.0 ]
   - program: send
 
 deployments:
   type: Grid
-  parameters: [-5, -5, 5, 5, *spacing, *spacing, *error, *error]
-  contents:
-    - in:
-        type: Rectangle
-        parameters: [-6, -6, 2, 2]
-      molecule: source
-      concentration: true
-  programs: *gradient
+  parameters: [-2, -2, 2, 2, *spacing, *spacing, *error, *error]
+  programs: *program
 
 export:
-#  - type: MongoDBExporter
-#    parameters:
-#      uri: mongodb://localhost:27017
-#      dbName: simulation
-#    data:
-#      - time
-#      - molecule: "org:protelis:tutorial:distanceTo"
-#        aggregators: [mean, min, max]
-#        value-filter: onlyfinite
   - type: CSVExporter
     parameters:
       fileNameRoot: simulation
@@ -61,10 +46,10 @@ export:
       exportPath: data
     data:
       - time
-      - molecule: "org:protelis:tutorial:distanceTo"
+      - molecule: "state"
         aggregators: [mean, min, max]
         value-filter: onlyfinite
 
 terminate:
   type: AfterTime
-  parameters: 150
+  parameters: 500
