@@ -1,7 +1,7 @@
 package it.unibo.fsm
 
-case class State[S: Ordering](state: S, priority: Double) {
-  def same(other: State[S]): Boolean = {
+case class State[+S: Ordering](state: S, priority: Double) {
+  def same[A >: S](other: State[A]): Boolean = {
     other.state == state
   }
 
