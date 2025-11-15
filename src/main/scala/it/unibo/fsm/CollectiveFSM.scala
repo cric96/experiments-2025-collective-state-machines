@@ -1,7 +1,7 @@
 package it.unibo.fsm
 
 import it.unibo.alchemist.model.scafi.ScafiIncarnationForAlchemist.AggregateProgram
-trait FSM {
+trait CollectiveFSM {
   self: AggregateProgram =>
 
   def fsm[S: Ordering](initial: S)(logic: S => State[S]): S = {

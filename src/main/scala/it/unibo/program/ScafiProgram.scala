@@ -1,13 +1,13 @@
 package it.unibo.program
 
 import it.unibo.alchemist.model.scafi.ScafiIncarnationForAlchemist.{AggregateProgram, ScafiAlchemistSupport, StandardSensors}
-import it.unibo.fsm.FSM
+import it.unibo.fsm.CollectiveFSM
 import it.unibo.fsm.State.AnyToState
 
 class ScafiProgram extends AggregateProgram
     with StandardSensors
     with ScafiAlchemistSupport
-    with FSM {
+    with CollectiveFSM {
 
   val waitState = 0
   val workState = 1
