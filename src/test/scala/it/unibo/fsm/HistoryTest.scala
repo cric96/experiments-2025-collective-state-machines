@@ -29,9 +29,9 @@ class HistoryTest extends AnyFunSuite with Matchers {
   }
 
   test("History max should work in the lexicographical order") {
-    val history1 = History("A").add(State("B", 1.0)).add(State("C", 2.0))
-    val history2 = History("A").add(State("B", 1.0)).add(State("D", 1.5))
-    val history3 = History("A").add(State("E", 0.5))
+    val history1 = History(0).add(State(0, 0)).add(State(1, 1.0)).add(State(0, 1.0))
+    val history2 = History(0).add(State(0, 0)).add(State(1, 1.0))
+    val history3 = History(0).add(State(0, 0))
     val histories = List(history1, history2, history3)
     val maxHistory = History.max(histories)
     maxHistory shouldBe history1

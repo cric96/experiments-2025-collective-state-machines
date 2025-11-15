@@ -7,14 +7,11 @@ trait FSM {
   def fsm[S: Ordering](initial: S)(logic: S => State[S]): S = {
     rep(History[S](initial)) { history =>
       val maxHistory = foldhood(history)((x, y) => History.max(x, y)){nbr(history)}
-      if(mid() == 0) {
-        println(history)
-      }
       val currentState = maxHistory.current.state
       val next = align(currentState) {
         state => logic(state)
       }
-      history.add(next)
+      maxHistory.add(next)
     }.current.state
   }
 }

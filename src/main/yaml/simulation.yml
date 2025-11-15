@@ -8,7 +8,7 @@ variables:
     default: 0
   spacing: &spacing
     type: ArbitraryVariable
-    parameters: [1, [0.25, 0.5]]
+    parameters: [0.25, [0.25, 0.5]]
   error: &error
     type: ArbitraryVariable
     parameters: [0.1, [0.1, 0.2]]
@@ -23,7 +23,7 @@ launcher:
 
 network-model:
   type: ConnectWithinDistance
-  parameters: [1.5]
+  parameters: [0.5]
 
 _program: &program
   - time-distribution: 1
@@ -35,7 +35,7 @@ _program: &program
 
 deployments:
   type: Grid
-  parameters: [-1, -1, 0, 1, *spacing, *spacing, *error, *error]
+  parameters: [0, 0, 1, 1, *spacing, *spacing, *error, *error]
   programs: *program
 
 export:
@@ -52,4 +52,4 @@ export:
 
 terminate:
   type: AfterTime
-  parameters: 500
+  parameters: 10000
