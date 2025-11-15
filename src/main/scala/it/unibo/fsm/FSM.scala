@@ -1,6 +1,6 @@
 package it.unibo.fsm
 
-import it.unibo.alchemist.model.scafi.ScafiIncarnationForAlchemist.{AggregateProgram, Builtins}
+import it.unibo.alchemist.model.scafi.ScafiIncarnationForAlchemist.AggregateProgram
 trait FSM {
   self: AggregateProgram =>
 
@@ -8,9 +8,7 @@ trait FSM {
     share(History[S](initial)) { (history, nbrHistory) =>
       val maxHistory = foldhood(history)((x, y) => History.max(x, y)){nbrHistory()}
       val currentState = maxHistory.current.state
-      val next = align(currentState) {
-        state => logic(state)
-      }
+      val next = align(currentState) { logic(_) }
       maxHistory.add(next)
     }.current.state
   }
