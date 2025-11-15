@@ -1,12 +1,12 @@
 [
   {
     "type": "class it.unibo.alchemist.boundary.gui.effects.DrawShape",
-    "curIncarnation": "protelis",
+    "curIncarnation": "scafi",
     "mode": "FILL_ELLIPSE",
     "red": {
       "max": 255,
       "min": 0,
-      "val": 0
+      "val": 255
     },
     "blue": {
       "max": 255,
@@ -31,79 +31,19 @@
     "size": {
       "max": 100,
       "min": 0,
-      "val": 19
-    },
-    "molFilter": false,
-    "molString": "org:protelis:tutorial:distanceTo",
-    "molPropertyFilter": false,
-    "property": "",
-    "writingPropertyValue": false,
-    "c": "HUE",
-    "reverse": false,
-    "propoom": {
-      "max": 10,
-      "min": -10,
-      "val": 1
-    },
-    "minprop": {
-      "max": 10,
-      "min": -10,
-      "val": 0
-    },
-    "maxprop": {
-      "max": 10,
-      "min": -10,
-      "val": 2
-    },
-    "colorCache": {
-      "value": -16776961
-    }
-  },
-  {
-    "type": "class it.unibo.alchemist.boundary.gui.effects.DrawShape",
-    "curIncarnation": "protelis",
-    "mode": "FILL_ELLIPSE",
-    "red": {
-      "max": 255,
-      "min": 0,
-      "val": 0
-    },
-    "blue": {
-      "max": 255,
-      "min": 0,
-      "val": 255
-    },
-    "green": {
-      "max": 255,
-      "min": 0,
-      "val": 0
-    },
-    "alpha": {
-      "max": 255,
-      "min": 0,
-      "val": 255
-    },
-    "scaleFactor": {
-      "max": 100,
-      "min": 0,
-      "val": 50
-    },
-    "size": {
-      "max": 100,
-      "min": 0,
-      "val": 17
+      "val": 33
     },
     "molFilter": true,
-    "molString": "org:protelis:tutorial:distanceTo",
+    "molString": "state",
     "molPropertyFilter": true,
     "property": "",
-    "writingPropertyValue": false,
+    "writingPropertyValue": true,
     "c": "HUE",
     "reverse": false,
     "propoom": {
       "max": 10,
       "min": -10,
-      "val": 1
+      "val": 0
     },
     "minprop": {
       "max": 10,
@@ -113,10 +53,10 @@
     "maxprop": {
       "max": 10,
       "min": -10,
-      "val": 2
+      "val": 10
     },
     "colorCache": {
-      "value": -16776961
+      "value": -65536
     }
   }
 ]

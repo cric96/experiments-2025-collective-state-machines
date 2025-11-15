@@ -5,8 +5,8 @@ trait FSM {
   self: AggregateProgram =>
 
   def fsm[S: Ordering](initial: S)(logic: S => State[S]): S = {
-    rep(History[S](initial)) { history =>
-      val maxHistory = foldhood(history)((x, y) => History.max(x, y)){nbr(history)}
+    share(History[S](initial)) { (history, nbrHistory) =>
+      val maxHistory = foldhood(history)((x, y) => History.max(x, y)){nbrHistory()}
       val currentState = maxHistory.current.state
       val next = align(currentState) {
         state => logic(state)
