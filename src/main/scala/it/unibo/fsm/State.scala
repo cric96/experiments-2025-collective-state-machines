@@ -1,5 +1,7 @@
 package it.unibo.fsm
 
+import scala.language.implicitConversions
+
 case class State[+S: Ordering](state: S, priority: Double) {
   override def toString: String =
     s"($state, ${renderNumber}"
