@@ -6,7 +6,7 @@ trait CollectiveFSM {
 
   def fsm[S: Ordering](initial: S)(logic: S => State[S]): S = {
     share(History[S](initial)) { (history, nbrHistory) =>
-      val maxHistory = foldhood(history)(History.max){nbrHistory()}
+      val maxHistory = foldhood[History[S]](history)(History.max){nbrHistory()}
       val currentState = maxHistory.current.state
       val next = align(currentState) { logic(_) }
       maxHistory.add(next)

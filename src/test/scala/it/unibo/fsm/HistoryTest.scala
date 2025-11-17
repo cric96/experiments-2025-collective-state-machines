@@ -33,7 +33,7 @@ class HistoryTest extends AnyFunSuite with Matchers {
     val history2 = History(0).add(State(0, 0)).add(State(1, 1.0))
     val history3 = History(0).add(State(0, 0))
     val histories = List(history1, history2, history3)
-    val maxHistory = History.max(histories)
+    val maxHistory = histories.max
     maxHistory shouldBe history1
   }
 }

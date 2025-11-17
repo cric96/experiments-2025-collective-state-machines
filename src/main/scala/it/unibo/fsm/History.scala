@@ -24,10 +24,6 @@ object History {
     Ordering.by[History[S], List[State[S]]](_.states.reverse)
   }
 
-  def max[S: Ordering](histories: List[History[S]]): History[S] = {
-    histories.max
-  }
-
   def max[S: Ordering](h1: History[S], h2: History[S]): History[S] = {
     if (historyOrdering[S].gt(h1, h2)) h1 else h2
   }
