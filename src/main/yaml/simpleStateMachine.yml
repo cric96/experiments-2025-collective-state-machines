@@ -30,7 +30,7 @@ _program: &program
     type: Event
     actions:
       - type: RunScafiProgram
-        parameters: [ it.unibo.program.ScafiProgram, 2.0 ]
+        parameters: [ it.unibo.program.SimpleStateMachine, 2.0 ]
   - program: send
 
 deployments:

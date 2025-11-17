@@ -34,6 +34,6 @@ class HistoryTest extends AnyFunSuite with Matchers {
     val history3 = History(0).add(State(0, 0))
     val histories = List(history1, history2, history3)
     val maxHistory = histories.max
-    maxHistory shouldBe history1
+     maxHistory shouldBe history1
   }
 }

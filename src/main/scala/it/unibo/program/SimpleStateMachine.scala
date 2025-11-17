@@ -4,7 +4,7 @@ import it.unibo.alchemist.model.scafi.ScafiIncarnationForAlchemist.{AggregatePro
 import it.unibo.fsm.CollectiveFSM
 import it.unibo.fsm.State.AnyToState
 
-class ScafiProgram extends AggregateProgram
+class SimpleStateMachine extends AggregateProgram
     with StandardSensors
     with ScafiAlchemistSupport
     with CollectiveFSM {
@@ -16,12 +16,12 @@ class ScafiProgram extends AggregateProgram
     val state = fsm(waitState) {
       case `waitState` =>
         rep(0)(_ + 1) match {
-          case value if value > 100 && mid() == 0 => workState --> 1.0
+          case value if value > 1000 && mid() == 0 => workState --> 1.0
           case _ => waitState
         }
       case `workState` =>
         rep(0)(_ + 1) match {
-          case value if value > 200 => waitState --> 1.0
+          case value if value > 2000 => waitState --> 1.0
           case _ => workState
         }
     }

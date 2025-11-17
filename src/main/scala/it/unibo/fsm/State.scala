@@ -1,10 +1,6 @@
 package it.unibo.fsm
 
 case class State[+S: Ordering](state: S, priority: Double) {
-  def same[A >: S](other: State[A]): Boolean = {
-    other.state == state
-  }
-
   override def toString: String =
     s"($state, ${renderNumber}"
 
@@ -23,6 +19,19 @@ object State {
   implicit class AnyToState[S: Ordering](val s: S) {
     def -->(priority: Double): State[S] = {
       State[S](s, priority)
+    }
+  }
+
+  def same[S](s1: State[S], s2: State[S])(implicit ord: Ordering[S]): Boolean = {
+    ord.equiv(s1.state, s2.state)
+  }
+
+  abstract class EqualsUsingOrdering[S: Ordering]() {
+    override def equals(obj: Any): Boolean = {
+      obj match {
+        case that: S => Ordering[S].equiv(this.asInstanceOf[S], that)
+        case _ => false
+      }
     }
   }
 }

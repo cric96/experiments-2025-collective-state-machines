@@ -4,8 +4,8 @@ import scala.math.Ordering.Implicits._
 case class History[S: Ordering](initial: S, val states: List[State[S]] = List()) {
   def add(state: State[S]): History[S] = {
     states.headOption match {
-      case Some(oldHead) if oldHead.same(state) && oldHead < state => this.copy(states = state :: states.tail)
-      case Some(oldHead) if oldHead.same(state) => this
+      case Some(oldHead) if State.same(oldHead, state) => this.copy(states = state :: states.tail)
+      // case Some(oldHead) if State.same(oldHead, state) => this
       case Some(_) | None => this.copy(states = state :: states)
     }
   }
