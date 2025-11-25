@@ -2,29 +2,29 @@ package it.unibo.fsm
 
 import scala.language.implicitConversions
 
-case class State[+S: Ordering](state: S, priority: Double) {
+case class Next[+S: Ordering](state: S, priority: Double) {
   override def toString: String =
     s"($state, ${renderNumber}"
 
   private def renderNumber: String = if(priority.isNegInfinity) { "_" } else { priority.toString }
 }
-object State {
+object Next {
   // ordering considering the priority first, then the state
-  implicit def stateOrdering[S: Ordering]: Ordering[State[S]] = {
-    Ordering.by[State[S], (Double, S)](s => (s.priority, s.state))
+  implicit def nextOrdering[S: Ordering]: Ordering[Next[S]] = {
+    Ordering.by[Next[S], (Double, S)](s => (s.priority, s.state))
   }
   // auto conversion from S to State[S] with minimum priority
-  implicit def fromState[S: Ordering](s: S): State[S] = {
-    State[S](s, Double.NegativeInfinity)
+  implicit def fromState[S: Ordering](s: S): Next[S] = {
+    Next[S](s, Double.NegativeInfinity)
   }
 
-  implicit class AnyToState[S: Ordering](val s: S) {
-    def -->(priority: Double): State[S] = {
-      State[S](s, priority)
+  implicit class AnyToNext[S: Ordering](val s: S) {
+    def -->(priority: Double): Next[S] = {
+      Next[S](s, priority)
     }
   }
 
-  def same[S](s1: State[S], s2: State[S])(implicit ord: Ordering[S]): Boolean = {
+  def same[S](s1: Next[S], s2: Next[S])(implicit ord: Ordering[S]): Boolean = {
     ord.equiv(s1.state, s2.state)
   }
 

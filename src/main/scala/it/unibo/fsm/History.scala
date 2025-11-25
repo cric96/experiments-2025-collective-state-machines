@@ -1,17 +1,17 @@
 package it.unibo.fsm
 import scala.math.Ordering.Implicits.seqOrdering
 import scala.math.Ordering.Implicits._
-case class History[S: Ordering](initial: S, val states: List[State[S]] = List()) {
-  def add(state: State[S]): History[S] = {
+case class History[S: Ordering](initial: S, val states: List[Next[S]] = List()) {
+  def add(next: Next[S]): History[S] = {
     states.headOption match {
-      case Some(oldHead) if State.same(oldHead, state) => this.copy(states = state :: states.tail)
+      case Some(oldHead) if Next.same(oldHead, next) => this.copy(states = next :: states.tail)
       // case Some(oldHead) if State.same(oldHead, state) => this
-      case Some(_) | None => this.copy(states = state :: states)
+      case Some(_) | None => this.copy(states = next :: states)
     }
   }
 
-  def current: State[S] =
-    states.headOption.getOrElse(State(initial, Double.MinValue))
+  def current: Next[S] =
+    states.headOption.getOrElse(Next(initial, Double.MinValue))
 
   override def toString: String = {
     s"H ~ ${(states.map(s => s"$s)").appended(s"$initial")).reverse.mkString(" -> ")}"
@@ -21,7 +21,7 @@ case class History[S: Ordering](initial: S, val states: List[State[S]] = List())
 
 object History {
   implicit def historyOrdering[S: Ordering]: Ordering[History[S]] = {
-    Ordering.by[History[S], List[State[S]]](_.states.reverse)
+    Ordering.by[History[S], List[Next[S]]](_.states.reverse)
   }
 
   def max[S: Ordering](h1: History[S], h2: History[S]): History[S] = {

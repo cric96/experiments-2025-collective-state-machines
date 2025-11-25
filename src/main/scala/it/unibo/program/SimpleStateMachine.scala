@@ -2,7 +2,7 @@ package it.unibo.program
 
 import it.unibo.alchemist.model.scafi.ScafiIncarnationForAlchemist.{AggregateProgram, ScafiAlchemistSupport, StandardSensors}
 import it.unibo.fsm.CollectiveFSM
-import it.unibo.fsm.State.AnyToState
+import it.unibo.fsm.Next.AnyToNext
 
 class SimpleStateMachine extends AggregateProgram
     with StandardSensors
@@ -13,7 +13,7 @@ class SimpleStateMachine extends AggregateProgram
   val workState = 1
 
   override def main(): Any = {
-    val state = fsm(waitState) {
+    val state = cfsm(waitState) {
       case `waitState` =>
         rep(0)(_ + 1) match {
           case value if value > 1000 && mid() == 0 => workState --> 1.0

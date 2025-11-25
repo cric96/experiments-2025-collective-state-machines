@@ -1,7 +1,7 @@
 package it.unibo.program
 
-import it.unibo.fsm.{CollectiveFSM, State}
-import it.unibo.fsm.State._
+import it.unibo.fsm.{CollectiveFSM, Next}
+import it.unibo.fsm.Next._
 import it.unibo.scafi.macroswarm.MacroSwarmAlchemistSupport._
 import it.unibo.scafi.macroswarm.MacroSwarmAlchemistSupport.incarnation._
 import it.unibo.scafi.space.Point3D
@@ -18,7 +18,7 @@ class MovementStateMachine
   private def top: Point3D = Point3D(bound, bound, 0.0)
 
   override protected def movementLogic(): Point3D = {
-    val result = fsm[MovementState](Exploring()) {
+    val result = cfsm[MovementState](Exploring()) {
       case Exploring() => handleExploring()
       case FoundProblem(leader) => handleFormingCircle(leader)
       case OnShape(leader) => handleOnShape(leader)
@@ -27,7 +27,7 @@ class MovementStateMachine
     result.velocity
   }
 
-  private def handleExploring(): State[MovementState] = {
+  private def handleExploring(): Next[MovementState] = {
     val velocity = explore(bottom, top, maxVelocity = 1.0)
     if (foundProblem) {
       FoundProblem(mid()) --> 1.0
@@ -36,7 +36,7 @@ class MovementStateMachine
     }
   }
 
-  private def handleFormingCircle(leader: Int): State[MovementState] = {
+  private def handleFormingCircle(leader: Int): Next[MovementState] = {
     val isLeader = leader == mid()
     val velocity = centeredCircle(isLeader, radius = 100, 1)
     if (isCircleFormed(isLeader, targetDistance = 100, confidence = 1)) {
@@ -46,7 +46,7 @@ class MovementStateMachine
     }
   }
 
-  private def handleOnShape(leader: Int): State[MovementState] = {
+  private def handleOnShape(leader: Int): Next[MovementState] = {
     val exploreAction = explore(bottom, top, maxVelocity = 0.5)
     val isLeader = leader == mid()
     val velocity = centeredCircle(isLeader, radius = 100, 1, leaderVelocity = exploreAction)

@@ -4,10 +4,10 @@ import it.unibo.alchemist.model.scafi.ScafiIncarnationForAlchemist.{AggregatePro
 trait CollectiveFSM {
   self: AggregateProgram with ScafiAlchemistSupport =>
 
-  def fsm[S: Ordering](initial: S)(logic: S => State[S]): S = {
+  def cfsm[S: Ordering](initial: S)(logic: S => Next[S]): S = {
     share(History[S](initial)) { (history, nbrHistory) =>
       val maxHistory = foldhood[History[S]](history)(History.max){nbrHistory()}
-      node.put("fsmHistory", maxHistory.toString)
+      node.put("cfsmHistory", maxHistory.toString)
       val currentState = maxHistory.current.state
       val next = align(currentState) { logic(_) }
       maxHistory.add(next)
