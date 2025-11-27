@@ -51,7 +51,7 @@ show a simple transition between two states (`work` and `wait`) showing both tra
 ### CONTENT
 
 - `/src/main/scala/it/unibo/program/SimpleStateMachine.scala`: it contains the implementation of the simple state machine with `cfsm` library.
-- `/src/main/yaml/simpleStateMachine.yaml`: it contains the alchemist configuration for the experiment.
+- `/src/main/yaml/movementStateMachine.yml`: it contains the alchemist configuration for the experiment. 
 
 ## Experiment 2: collective movement with state-based coordination
 In this experiment, we demonstrate a multi-state collective behavior where agents coordinate their movement based on problem detection and collective shape formation.
@@ -102,3 +102,33 @@ stateDiagram-v2
 
 - `/src/main/scala/it/unibo/program/MovementStateMachine.scala`: it contains the implementation of the movement-based state machine with `cfsm` library, including three states with different movement behaviors.
 - `/src/main/yaml/movementStateMachine.yml`: it contains the alchemist configuration for the experiment. 
+
+## Experiment 3: Branching History
+In this experiment, we explore how a collective state machine can handle branching histories, where different subgroups of nodes can temporarily diverge into separate states before potentially reconverging. This scenario models situations where a subset of the collective encounters a local condition that requires a different behavior, creating a temporary "split" in the collective state.
+
+### Goal
+Demonstrate the ability of the CFSM framework to manage state divergence and convergence in a distributed system. The goal is to show how a single node's condition (`mid() == 0`) can trigger a global state transition, while other nodes follow a different path, and how the system eventually synchronizes.
+
+### How to run?
+`./gradlew runBranchingHistoryMachineGraphic`
+
+### State Machine
+```mermaid
+stateDiagram-v2
+    [*] --> waitState: _
+    waitState --> finishState: 1.0 / mid() == 0
+    waitState --> middleState: 0.0 / else
+    middleState --> waitState: 0.0
+    finishState --> finishState: 1.0
+```
+
+### Explanation of Dynamics
+- The system starts in the `waitState`.
+- If the leader node (`mid() == 0`) is present, it triggers a high-priority transition to the `finishState`. Since this transition has the highest priority (`1.0`), all nodes will eventually adopt the `finishState`.
+- If the leader is not present, nodes will transition to the `middleState` with a lower priority (`0.0`).
+- From the `middleState`, nodes will transition back to the `waitState`, creating a loop until the leader triggers the final state.
+- Once in the `finishState`, the system remains there indefinitely.
+
+### Content
+- `/src/main/scala/it/unibo/program/BranchingHistoryMachine.scala`: Contains the implementation of the branching history state machine.
+- `/src/main/yaml/branchingHistoryMachine.yml`: Alchemist configuration for this experiment.

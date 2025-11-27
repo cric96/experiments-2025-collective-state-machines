@@ -4,26 +4,25 @@ import it.unibo.alchemist.model.scafi.ScafiIncarnationForAlchemist.{AggregatePro
 import it.unibo.cfsm.CollectiveFSM
 import it.unibo.cfsm.Next.AnyToNext
 
-class SimpleStateMachine extends AggregateProgram
+class BranchingHistoryMachine extends AggregateProgram
     with StandardSensors
     with ScafiAlchemistSupport
     with CollectiveFSM {
 
   val waitState = 0
-  val workState = 1
+  val middleState = 1
+  val finishState = 2
 
   override def main(): Any = {
     val state = cfsm(waitState) {
       case `waitState` =>
-        rep(0)(_ + 1) match {
-          case value if value > 100 && mid() == 0 => workState --> 1.0
-          case _ => waitState
+        if(mid() == 0) {
+          finishState --> 1.0
+        } else {
+          middleState
         }
-      case `workState` =>
-        rep(0)(_ + 1) match {
-          case value if value > 200 => waitState --> 1.0
-          case _ => workState
-        }
+      case `middleState` => waitState
+      case `finishState` => finishState
     }
     node.put("state", state)
   }
