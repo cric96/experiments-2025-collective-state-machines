@@ -28,10 +28,13 @@ The `logic` function returns a `Next[S]` object that contains the next state and
 In this experiment, we demonstrate a simple transition between two states in a collective state machine.
 ```mermaid
 stateDiagram-v2
-    [*] --> waitState
-    waitState --> workState: After 1000 rounds (leader only)
-    workState --> waitState: After 2000 rounds (any node)
+    [*] --> waitState: _
+    waitState --> workState: 1.0 / value > 1000 & leader
+    workState --> waitState: 1.0 / value > 2000
+    waitState --> waitState: _ / else
+    workState --> workState: 1.0 / else
 ```
+`_` means the lowest priority (default transition).
 ### GOAL: 
 show a simple transition between two states (`work` and `wait`) showing both transition decided by one node (leader) and by any node.
 
@@ -40,9 +43,10 @@ show a simple transition between two states (`work` and `wait`) showing both tra
 
 ### EXPLANATION OF DYNAMICS
 
-- After start (`p` key) the system will start in the `waitState`. 
-- After 1000 rounds it will transition to the `workState` (this transition is decided by the node with the ID equals to 0).
-- After another 2000 rounds it will transition back to the `waitState` (any node can decide this transition).
+- After start (`p` key) the system will start in the `waitState` (priority `_`).
+- Transition to `workState` with priority `1.0` when the round counter (`value`) is greater than 1000 and the node is the leader (`mid() == 0`).
+- Transition back to `waitState` with priority `1.0` when the round counter (`value`) is greater than 2000.
+- Each state has a self-loop with its own priority value for all other cases.
 
 ### CONTENT
 
@@ -60,10 +64,13 @@ Show a complex transition between three states (`Exploring`, `FoundProblem`, and
 
 ```mermaid
 stateDiagram-v2
-    [*] --> Exploring
-    Exploring --> FoundProblem: Problem detected
-    FoundProblem --> OnShape: Circle formed (confidence threshold met)
-    OnShape --> Exploring: Problem resolved 
+    [*] --> Exploring: _
+    Exploring --> FoundProblem: 1.0 / foundProblem
+    FoundProblem --> OnShape: 1.0 / isCircleFormed
+    OnShape --> Exploring: 1.0 / resolveProblem
+    Exploring --> Exploring: _ / else
+    FoundProblem --> FoundProblem: 1.0 / else
+    OnShape --> OnShape: 1.0 / else
     
     note right of Exploring
         Random exploration
@@ -84,12 +91,11 @@ stateDiagram-v2
 ```
 ### EXPLANATION OF DYNAMICS
 
-- The system starts in the `Exploring` state, where all agents explore the environment with random movement within bounds.
-- if a problem is detected (in this case, for sake of simplicity, after 1000 rounds by node ID 1), the system transitions to the `FoundProblem` state with the detecting node becoming the leader.
-- In the `FoundProblem` state, agents form a circle around the leader with a radius of 100 units.
-- Once the circle is formed (with sufficient confidence), the system transitions to the `OnShape` state.
-- In the `OnShape` state, the collective maintains the circular formation while the leader explores, effectively moving the entire formation.
-- After the problem is solved (in this case, after 5000 rounds) in `OnShape` state any node can trigger a transition back to the `Exploring` state.
+- The system starts in the `Exploring` state (priority `_`).
+- Transition to `FoundProblem` with priority `1.0` when `foundProblem` is true (after 1000 rounds and node ID 1).
+- Transition to `OnShape` with priority `1.0` when `isCircleFormed` is true (circle formed with confidence).
+- Transition back to `Exploring` with priority `1.0` when `resolveProblem` is true (after 5000 rounds).
+- Each state has a self-loop with its own priority value for all other cases.
 
 
 ### CONTENT
