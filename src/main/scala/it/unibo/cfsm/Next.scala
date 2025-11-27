@@ -1,4 +1,4 @@
-package it.unibo.fsm
+package it.unibo.cfsm
 
 import scala.language.implicitConversions
 

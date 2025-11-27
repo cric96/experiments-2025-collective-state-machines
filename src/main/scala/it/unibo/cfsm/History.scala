@@ -1,4 +1,4 @@
-package it.unibo.fsm
+package it.unibo.cfsm
 import scala.math.Ordering.Implicits.seqOrdering
 import scala.math.Ordering.Implicits._
 case class History[S: Ordering](initial: S, val states: List[Next[S]] = List()) {

@@ -1,8 +1,8 @@
 package it.unibo.program
 
 import it.unibo.alchemist.model.scafi.ScafiIncarnationForAlchemist.{AggregateProgram, ScafiAlchemistSupport, StandardSensors}
-import it.unibo.fsm.CollectiveFSM
-import it.unibo.fsm.Next.AnyToNext
+import it.unibo.cfsm.CollectiveFSM
+import it.unibo.cfsm.Next.AnyToNext
 
 class SimpleStateMachine extends AggregateProgram
     with StandardSensors

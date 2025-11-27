@@ -1,7 +1,7 @@
 package it.unibo.program
 
-import it.unibo.fsm.{CollectiveFSM, Next}
-import it.unibo.fsm.Next._
+import it.unibo.cfsm.{CollectiveFSM, Next}
+import it.unibo.cfsm.Next._
 import it.unibo.scafi.macroswarm.MacroSwarmAlchemistSupport._
 import it.unibo.scafi.macroswarm.MacroSwarmAlchemistSupport.incarnation._
 import it.unibo.scafi.space.Point3D

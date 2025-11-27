@@ -1,4 +1,4 @@
-package it.unibo.fsm
+package it.unibo.cfsm
 
 import it.unibo.alchemist.model.scafi.ScafiIncarnationForAlchemist.{AggregateProgram, ScafiAlchemistSupport}
 trait CollectiveFSM {

@@ -1,5 +1,5 @@
-package it.unibo.fsm
-import it.unibo.fsm.Next._
+package it.unibo.cfsm
+import it.unibo.cfsm.Next._
 import org.scalatest.funsuite._
 import org.scalatest.matchers.should.Matchers
 class HistoryTest extends AnyFunSuite with Matchers {
