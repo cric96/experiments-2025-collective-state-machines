@@ -47,6 +47,7 @@ show a simple transition between two states (`work` and `wait`) showing both tra
 - Transition to `workState` with priority `1.0` when the round counter (`value`) is greater than 1000 and the node is the leader (`mid() == 0`).
 - Transition back to `waitState` with priority `1.0` when the round counter (`value`) is greater than 2000.
 - Each state has a self-loop with its own priority value for all other cases.
+- Graphically, you see that the nodes labels synchronise at time on value "0" and at time on value "1" (these are integers corresponding to the `waitState` and `workState`, respectively)
 
 ### CONTENT
 
