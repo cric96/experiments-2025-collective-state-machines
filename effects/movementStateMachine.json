@@ -65,7 +65,7 @@
     "snapshotSize": {
       "max": 1000,
       "min": 10,
-      "val": 260
+      "val": 10
     },
     "timespan": {
       "max": 100,
