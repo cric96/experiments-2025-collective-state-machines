@@ -129,6 +129,8 @@ stateDiagram-v2
 - From the `middleState`, nodes will transition back to the `waitState`, creating a loop until the leader triggers the final state.
 - Once in the `finishState`, the system remains there indefinitely.
 - Since there is a split brain (half of the nodes will be detached from the leader), the history will be branching, demonstrating the ability of the CFSM to handle divergent states when the nodes will communicate again and then converge on the `finishState`.
+- At `t=100` the two groups of devices are re-united and so the half of devices bouncing between `waitState` and `middleState` receive the history related to `finishState` and converge towards it
+
 ### Content
 - `/src/main/scala/it/unibo/program/BranchingHistoryMachine.scala`: Contains the implementation of the branching history state machine.
 - `/src/main/yaml/branchingHistoryMachine.yml`: Alchemist configuration for this experiment.
