@@ -12,11 +12,13 @@ class HistoryTest extends AnyFunSuite with Matchers {
 
     val updatedHistory1 = history.add(state1)
     updatedHistory1.states.head shouldBe state1
+    updatedHistory1.states shouldBe state1 :: Nil
     val updatedHistory2 = updatedHistory1.add(state2)
     updatedHistory2.states.head shouldBe state2 // should replace state1
+    updatedHistory2.states shouldBe state2 :: state1 :: Nil
     val updatedHistory3 = updatedHistory2.add(state3)
     updatedHistory3.states.head shouldBe state3
-    updatedHistory3.states(1) shouldBe state2
+    updatedHistory3.states shouldBe state3 :: state1 :: Nil // state 2 was the self loop
   }
 
   test("History current method should return the latest state") {
@@ -29,7 +31,7 @@ class HistoryTest extends AnyFunSuite with Matchers {
   }
 
   test("History max should work in the lexicographical order") {
-    val history1 = History(0).add(Next(0, 0)).add(Next(1, 1.0)).add(Next(0, 1.0))
+    val history1 = History(0).add(Next(0, 0)).add(Next(1, 1.0)).add(Next(2, 1.0))
     val history2 = History(0).add(Next(0, 0)).add(Next(1, 1.0))
     val history3 = History(0).add(Next(0, 0))
     val histories = List(history1, history2, history3)

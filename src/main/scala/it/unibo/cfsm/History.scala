@@ -1,12 +1,13 @@
 package it.unibo.cfsm
 import scala.math.Ordering.Implicits.seqOrdering
-import scala.math.Ordering.Implicits._
 case class History[S: Ordering](initial: S, val states: List[Next[S]] = List()) {
   def add(next: Next[S]): History[S] = {
-    states.headOption match {
-      case Some(oldHead) if Next.same(oldHead, next) => this.copy(states = next :: states.tail)
-      // case Some(oldHead) if State.same(oldHead, state) => this
-      case Some(_) | None => this.copy(states = next :: states)
+    states match {
+      case last :: previous :: tail
+          if Next.same(last, previous)=>
+        this.copy(states = next :: previous :: tail)
+      case _ =>
+        this.copy(states = next :: states)
     }
   }
 
