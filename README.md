@@ -135,3 +135,44 @@ stateDiagram-v2
 ### Content
 - `/src/main/scala/it/unibo/program/BranchingHistoryMachine.scala`: Contains the implementation of the branching history state machine.
 - `/src/main/yaml/branchingHistoryMachine.yml`: Alchemist configuration for this experiment.
+
+## Experiment 4: At least N agreement
+In this experiment, we demonstrate a collective state machine that reaches an agreement when at least N nodes satisfy a certain condition. The state machine progresses through states as more nodes meet the condition and regresses as they no longer meet it.
+
+### Goal
+Show a state machine that can count how many nodes satisfy a condition, demonstrating a form of collective counting and agreement.
+
+### How to run?
+`./gradlew runAtLeastNMachineGraphic`
+
+### State Machine
+```mermaid
+stateDiagram-v2
+    [*] --> NoBody: _
+    NoBody --> FirstAgree: 1.0 / needToChange
+    FirstAgree --> SecondAgree: 1.0 / needToChange
+    SecondAgree --> ThirdAgree: 1.0 / needToChange
+    ThirdAgree --> Agreed: 1.0 / needToChange
+    
+    Agreed --> ThirdAgree: 10.0 / !needToChange
+    ThirdAgree --> SecondAgree: 10.0 / !needToChange
+    SecondAgree --> FirstAgree: 10.0 / !needToChange
+    FirstAgree --> NoBody: 10.0 / !needToChange
+
+    NoBody --> NoBody: _ / else
+    FirstAgree --> FirstAgree: _ / else
+    SecondAgree --> SecondAgree: _ / else
+    ThirdAgree --> ThirdAgree: _ / else
+    Agreed --> Agreed: _ / else
+```
+
+### Explanation of Dynamics
+- The system starts in the `NoBody` state.
+- A node transitions to a state of higher agreement (e.g., `NoBody` to `FirstAgree`) with priority `1.0` if it satisfies the `condition` (`needToChange` is true).
+- As more nodes satisfy the condition, the collective state progresses towards `Agreed`.
+- If a node in a state of agreement no longer satisfies the `condition` (`needToChange` is false), it triggers a high-priority transition to a state of lower agreement (e.g., `Agreed` to `ThirdAgree`). The priority of these backward transitions is higher to ensure that the system correctly reflects the number of nodes satisfying the condition.
+- Each state has a self-loop with a default priority (`_`) for all other cases.
+
+### Content
+- `/src/main/scala/it/unibo/program/AtLeastNMachine.scala`: Contains the implementation of the at-least-N agreement state machine.
+- `/src/main/yaml/atLeastNMachine.yml`: Alchemist configuration for this experiment.
