@@ -6,11 +6,8 @@ trait CollectiveFSM {
 
   def cfsm[S: Ordering](initial: S)(logic: S => Next[S]): S = {
     share(History[S](initial)) { (history, nbrHistory) =>
-      val maxHistory = foldhood[History[S]](history)(History.max){nbrHistory()}
-      node.put("cfsmHistory", maxHistory.toString)
-      val currentState = maxHistory.current.state
-      val next = align(currentState) { logic(_) }
-      maxHistory.add(next)
+      val next = align(history.current.state) { logic(_) }
+      foldhood[History[S]](history.add(next))(History.max){nbrHistory()}
     }.current.state
   }
 }

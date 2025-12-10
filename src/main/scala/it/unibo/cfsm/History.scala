@@ -4,7 +4,7 @@ case class History[S: Ordering](initial: S, val states: List[Next[S]] = List()) 
   def add(next: Next[S]): History[S] = {
     states match {
       case last :: previous :: tail
-          if Next.same(last, previous)=>
+          if Next.same(last, previous) =>
         this.copy(states = next :: previous :: tail)
       case _ =>
         this.copy(states = next :: states)

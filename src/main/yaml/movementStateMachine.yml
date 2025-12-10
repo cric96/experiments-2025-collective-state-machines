@@ -1,6 +1,4 @@
 incarnation: scafi
-# Define the launcher, standard one
-launcher: { parameters: { batch: [], autoStart: false } }
 # Attach the GUI to the simulator
 monitors: { type: SwingGUI, parameters: { graphics: src/main/resources/effect.json } }
 

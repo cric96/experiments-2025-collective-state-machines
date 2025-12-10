@@ -190,11 +190,11 @@ if __name__ == '__main__':
     timeSamples = 100
     # time management
     minTime = 0
-    maxTime = 50
+    maxTime = 10
     timeColumnName = 'time'
     logarithmicTime = False
     # One or more variables are considered random and "flattened"
-    seedVars = ['seed', 'longseed']
+    seedVars = ['seed']
     # Label mapping
     class Measure:
         def __init__(self, description, unit = None):
