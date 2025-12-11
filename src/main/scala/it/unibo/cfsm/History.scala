@@ -4,7 +4,7 @@ case class History[S: Ordering](initial: S, val states: List[Next[S]] = List()) 
   def add(next: Next[S]): History[S] = {
     states match {
       case last :: previous :: tail
-          if Next.same(last, previous) =>
+          if Next.same(last, previous) && Next.same(last, next) =>
         this.copy(states = next :: previous :: tail)
       case _ =>
         this.copy(states = next :: states)
@@ -13,6 +13,15 @@ case class History[S: Ordering](initial: S, val states: List[Next[S]] = List()) 
 
   def current: Next[S] =
     states.headOption.getOrElse(Next(initial, Double.MinValue))
+
+  def replaceWhenLooping(next: Next[S]): History[S] = {
+    states match {
+      case last :: previous :: tail
+          if Next.same(last, previous) && Next.same(next, last) =>
+        this.copy(states = next :: previous :: tail)
+      case _ => this
+    }
+  }
 
   override def toString: String = {
     s"H ~ ${(states.map(s => s"$s)").appended(s"$initial")).reverse.mkString(" -> ")}"
