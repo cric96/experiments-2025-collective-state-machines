@@ -24,7 +24,7 @@ class LeftRightMachine extends AggregateProgram
           waitState
         }
       } else {
-        current
+        current --> Double.MinValue
       }
     }
     node.put("state", state)
