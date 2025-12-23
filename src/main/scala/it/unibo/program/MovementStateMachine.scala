@@ -1,7 +1,7 @@
 package it.unibo.program
 
-import it.unibo.cfsm.{CollectiveFSM, Next}
 import it.unibo.cfsm.Next._
+import it.unibo.cfsm.{BoundedHistory, CollectiveFSM, Next, PlainHistory}
 import it.unibo.scafi.macroswarm.MacroSwarmAlchemistSupport._
 import it.unibo.scafi.macroswarm.MacroSwarmAlchemistSupport.incarnation._
 import it.unibo.scafi.space.Point3D
@@ -12,6 +12,7 @@ class MovementStateMachine
     with ProcessFix with CustomSpawn with BaseMovementLib
     with ScafiAlchemistSupport with GPSMovement with CollectiveFSM {
   import MovementStateMachine._
+  implicit def historyModule = BoundedHistory.create(() => alchemistTimestamp.toDouble)
 
   private val bound = 500
   private def bottom: Point3D = Point3D(-bound, -bound, 0.0)

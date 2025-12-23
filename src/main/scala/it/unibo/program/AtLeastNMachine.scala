@@ -1,13 +1,15 @@
 package it.unibo.program
 
 import it.unibo.alchemist.model.scafi.ScafiIncarnationForAlchemist.{AggregateProgram, ScafiAlchemistSupport, StandardSensors}
-import it.unibo.cfsm.CollectiveFSM
 import it.unibo.cfsm.Next.AnyToNext
+import it.unibo.cfsm.{CollectiveFSM, PlainHistory}
 
 class AtLeastNMachine extends AggregateProgram
   with StandardSensors
   with ScafiAlchemistSupport
   with CollectiveFSM {
+
+  implicit def historyModule = PlainHistory
 
   case class AgreedState(ids: Set[Int]) {
     def renderState: Int = ids.size

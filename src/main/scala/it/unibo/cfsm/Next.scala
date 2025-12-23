@@ -6,7 +6,10 @@ case class Next[+S: Ordering](state: S, priority: Double) {
   override def toString: String =
     s"($state, ${renderNumber}"
 
-  private def renderNumber: String = if(priority.isNegInfinity) { "_" } else { priority.toString }
+  private def renderNumber: String =
+    if(priority.isNegInfinity) { "_" }
+    else if(priority.isPosInfinity) { "+∞" }
+    else { priority.toString }
 }
 object Next {
   // ordering considering the priority first, then the state
