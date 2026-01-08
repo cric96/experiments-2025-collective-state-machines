@@ -1,11 +1,6 @@
 package it.unibo.alchemist.model.implementations.reactions
 
-import it.unibo.alchemist.model.{Action, Actionable, Condition, Dependency, Environment, GlobalReaction, Node, Position, Time, TimeDistribution}
-import org.danilopianini.util.{ListSet, ListSets}
-
-import java.util
-import scala.jdk.CollectionConverters.IteratorHasAsScala
-import scala.util.Random
+import it.unibo.alchemist.model.{Environment, Node, Position, TimeDistribution}
 
 class SplitBrainBehaviour[T, P <: Position[P]](
   environment: Environment[T, P],

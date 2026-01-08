@@ -1,0 +1,99 @@
+incarnation: scafi
+
+variables:
+  seed: &seed
+    min: 1
+    max: 32
+    step: 1
+    default: 1
+  connection_range_percentage: &connection_range
+    type: LinearVariable
+    parameters: [ 0.25, 0.25, 1, 0.25 ]
+  drones: &drones
+    type: LinearVariable
+    parameters: [ 20, 20, 100, 20 ]
+  side_length: &side_length
+    formula: 100.0
+  half_side_length: &half_side_length
+    formula: side_length / 2.0
+  negative_half_side_length: &negative_half_side_length
+    formula: -1 * half_side_length
+  connection_range: &connection_range
+    formula: connection_range_percentage * side_length
+environment:
+  type: Continuous2DEnvironment
+  parameters: [ ]
+  global-programs:
+    - time-distribution:
+        type: PredefinedTimeDistribution
+        parameters: [ [1.0, 100.0, 200.0] ]
+      type: SpawnDanger
+      parameters: [ 3 ]
+
+seeds:
+  scenario: *seed
+  simulation: *seed
+
+network-model:
+  type: ConnectWithinDistance
+  parameters: [*connection_range]
+
+_programs:
+  - program: &program # MacroSwarm program, executed every second
+      - time-distribution: 1
+        type: Event
+        actions:
+          - type: RunScafiProgram
+            parameters: [ it.unibo.program.CaseStudy, 1.0]
+      - program: send
+  - move: &move # Related actuation, executed every second
+      - time-distribution: 1
+        type: Event
+        actions: { type: MoveToTarget, parameters: [ destination, 10 ] }
+
+deployments:
+  - type: Point
+    parameters: [0, 0]
+    contents:
+      - molecule: base
+        concentration: true
+  # Bounds
+  - type: Point
+    parameters: [ 0, *negative_half_side_length ]
+    contents:
+      - molecule: anchor
+        concentration: true
+  - type: Point
+    parameters: [ *side_length, *negative_half_side_length ]
+    contents:
+      - molecule: anchor
+        concentration: true
+  - type: Point
+    parameters: [ *side_length, *half_side_length ]
+    contents:
+      - molecule: anchor
+        concentration: true
+  - type: Point
+    parameters: [ 0, *half_side_length ]
+    contents:
+      - molecule: anchor
+        concentration: true
+  - type: Rectangle
+    parameters: [*drones, -5, -5, 10, 10]
+    contents:
+      - molecule: side
+        concentration: *side_length
+    programs: [ *program, *move ] # Add the behaviour
+
+export:
+  - type: CSVExporter
+    parameters:
+      fileNameRoot: simulation
+      interval: 1
+      exportPath: data
+    data:
+      - time
+      - molecule: "state"
+        aggregators: [mean, min, max]
+        value-filter: onlyfinite
+
