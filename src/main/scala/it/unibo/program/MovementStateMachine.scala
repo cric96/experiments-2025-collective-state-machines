@@ -7,10 +7,18 @@ import it.unibo.scafi.macroswarm.MacroSwarmAlchemistSupport.incarnation._
 import it.unibo.scafi.space.Point3D
 
 class MovementStateMachine
-  extends MacroSwarmProgram with StandardSensors with TimeUtils
-    with PatternFormationLib with BlocksWithShare with BlocksWithGC
-    with ProcessFix with CustomSpawn with BaseMovementLib
-    with ScafiAlchemistSupport with GPSMovement with CollectiveFSM {
+    extends MacroSwarmProgram
+    with StandardSensors
+    with TimeUtils
+    with PatternFormationLib
+    with BlocksWithShare
+    with BlocksWithGC
+    with ProcessFix
+    with CustomSpawn
+    with BaseMovementLib
+    with ScafiAlchemistSupport
+    with GPSMovement
+    with CollectiveFSM {
   import MovementStateMachine._
   implicit def historyModule = BoundedHistory.create(() => alchemistTimestamp.toDouble)
 

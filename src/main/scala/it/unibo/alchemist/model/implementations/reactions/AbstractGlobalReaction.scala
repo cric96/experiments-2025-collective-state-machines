@@ -1,6 +1,17 @@
 package it.unibo.alchemist.model.implementations.reactions
 
-import it.unibo.alchemist.model.{Action, Actionable, Condition, Dependency, Environment, GlobalReaction, Position, Time, TimeDistribution, Node}
+import it.unibo.alchemist.model.{
+  Action,
+  Actionable,
+  Condition,
+  Dependency,
+  Environment,
+  GlobalReaction,
+  Position,
+  Time,
+  TimeDistribution,
+  Node
+}
 import org.danilopianini.util.{ListSet, ListSets}
 import scala.jdk.CollectionConverters.IteratorHasAsScala
 import java.util
@@ -8,7 +19,7 @@ import java.util
 abstract class AbstractGlobalReaction[T, P <: Position[P]](
     val environment: Environment[T, P],
     distribution: TimeDistribution[T]
-  ) extends GlobalReaction[T] {
+) extends GlobalReaction[T] {
   private val actions: util.List[Action[T]] = util.List.of()
   private val conditions: util.List[Condition[T]] = util.List.of()
   override def getActions: util.List[Action[T]] = actions

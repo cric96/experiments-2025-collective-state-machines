@@ -3,10 +3,10 @@ package it.unibo.alchemist.model.implementations.reactions
 import it.unibo.alchemist.model.{Environment, Node, Position, TimeDistribution}
 
 class SplitBrainBehaviour[T, P <: Position[P]](
-  environment: Environment[T, P],
-  distribution: TimeDistribution[T],
-  delta: Double
-) extends AbstractGlobalReaction[T, P](environment,distribution) {
+    environment: Environment[T, P],
+    distribution: TimeDistribution[T],
+    delta: Double
+) extends AbstractGlobalReaction[T, P](environment, distribution) {
 
   override protected def executeBeforeUpdateDistribution(): Unit = {
     val (group1, group2) = nodes.splitAt(nodes.size / 2)

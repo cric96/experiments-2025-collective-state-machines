@@ -1,20 +1,48 @@
 package it.unibo.alchemist.model.implementations.reactions
 
-import it.unibo.alchemist.model.molecules.SimpleMolecule
+import it.unibo.alchemist.model.molecules.{MoleculeConstants, SimpleMolecule}
 import it.unibo.alchemist.model.nodes.GenericNode
-import it.unibo.alchemist.model.{Environment, Node, Position, TimeDistribution}
+import it.unibo.alchemist.model.reactions.Event
+import it.unibo.alchemist.model.timedistributions.DiracComb
+import it.unibo.alchemist.model.{Environment, Node, Position, Reaction, TimeDistribution}
+import org.apache.commons.math3.random.RandomGenerator
 
 class SpawnDanger[T, P <: Position[P]](
-  environment: Environment[T, P],
-  distribution: TimeDistribution[T],
-  delta: Double
-) extends AbstractGlobalReaction[T, P](environment,distribution) {
+    environment: Environment[T, P],
+    distribution: TimeDistribution[T],
+    randomGenerator: RandomGenerator,
+    sideLength: Double,
+    visionProblemRadius: Double,
+    nodesNeededToSolve: Int
+) extends AbstractGlobalReaction[T, P](environment, distribution) {
+  lazy val base = nodes.filter(_.contains(MoleculeConstants.BASE)).head
 
   override protected def executeBeforeUpdateDistribution(): Unit = {
-    val center = nodes.map(environment.getPosition).map(_.getCoordinates).transpose.map(coords => coords.sum / coords.size)
-    val dangerPosition = environment.makePosition(center.toArray.map(_ + delta))
-    val dangerNode = new GenericNode(environment.getIncarnation, environment)
-    dangerNode.setConcentration(new SimpleMolecule("problem"), true.asInstanceOf[T])
-    environment.addNode(dangerNode, dangerPosition)
+    if (!base.getConcentration(MoleculeConstants.ALARM).asInstanceOf[Boolean]) {
+      val x = randomGenerator.nextDouble() * sideLength
+      val y = randomGenerator.nextDouble() * sideLength - sideLength / 2
+      val problemPosition = Array(x, y)
+      val dangerPosition = environment.makePosition(problemPosition)
+      val dangerNode = new GenericNode(environment.getIncarnation, environment)
+      dangerNode.setConcentration(MoleculeConstants.PROBLEM, true.asInstanceOf[T])
+      val reaction = new Event[T](
+        dangerNode,
+        new DiracComb(environment.getSimulation.getTime, 1)
+      )
+      reaction.setActions(
+        java.util.List.of(
+          new SolvingProblemAction[T, P](
+            dangerNode,
+            environment,
+            reaction,
+            visionProblemRadius,
+            nodesNeededToSolve
+          )
+        )
+      )
+      dangerNode.addReaction(reaction)
+      environment.addNode(dangerNode, dangerPosition)
+      base.setConcentration(MoleculeConstants.ALARM, true.asInstanceOf[T])
+    }
   }
 }

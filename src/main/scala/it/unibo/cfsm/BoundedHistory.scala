@@ -29,8 +29,7 @@ object BoundedHistory {
     def add[S: Ordering](history: BoundedHistory[S], next: Next[S]): BoundedHistory[S] = {
       val timestamp = timestampGenerator.current()
       history.transitions match {
-        case (_, last) :: (timestampPrevious, previous) :: tail
-          if Next.same(last, previous) && Next.same(last, next) =>
+        case (_, last) :: (timestampPrevious, previous) :: tail if Next.same(last, previous) && Next.same(last, next) =>
           cleanUp(history.copy(transitions = (timestamp, next) :: timestampPrevious -> previous :: tail))
         case _ =>
           cleanUp(history.copy(transitions = (timestamp, next) :: history.transitions))
@@ -39,7 +38,9 @@ object BoundedHistory {
 
     def cleanUp[S: Ordering](history: BoundedHistory[S]): BoundedHistory[S] = {
       val currentTime = timestampGenerator.current()
-      val cleanedTransitions = history.transitions.reverse.dropWhile { case (ts, _) => (currentTime - ts) > maxLife }.reverse
+      val cleanedTransitions = history.transitions.reverse.dropWhile { case (ts, _) =>
+        (currentTime - ts) > maxLife
+      }.reverse
       val newTransitions = if (cleanedTransitions.size >= 2) {
         cleanedTransitions
       } else history.transitions.take(2)
@@ -53,21 +54,18 @@ object BoundedHistory {
 
     def replaceWhenLooping[S: Ordering](history: BoundedHistory[S], next: Next[S]): BoundedHistory[S] = {
       history.transitions match {
-        case (_, last) :: (timestampPrevious, previous) :: tail
-          if Next.same(last, previous) && Next.same(next, last) =>
+        case (_, last) :: (timestampPrevious, previous) :: tail if Next.same(last, previous) && Next.same(next, last) =>
           val timestamp = timestampGenerator.current()
           cleanUp(history.copy(transitions = (timestamp, next) :: timestampPrevious -> previous :: tail))
         case _ => cleanUp(history)
       }
     }
 
-    def max[S: Ordering](h1: BoundedHistory[S], h2: BoundedHistory[S]): BoundedHistory[S] = {
+    def max[S: Ordering](h1: BoundedHistory[S], h2: BoundedHistory[S]): BoundedHistory[S] =
       if (historyOrdering[S].gt(h1, h2)) h1 else h2
-    }
 
-    def render[S: Ordering](history: BoundedHistory[S]): String = {
-      s"BH (w = ${history.wildcards}) ~ ${(history.transitions.map { case (ts, s) => s"($s, $ts)" }).reverse.mkString(" -> ")}"
-    }
+    def render[S: Ordering](history: BoundedHistory[S]): String =
+      s"BH (w = ${history.wildcards}) ~ ${history.transitions.map { case (ts, s) => s"($s, $ts)" }.reverse.mkString(" -> ")}"
 
     implicit def historyOrdering[S: Ordering]: Ordering[BoundedHistory[S]] = {
       val transitionsOrdering =

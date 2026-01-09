@@ -19,6 +19,6 @@ abstract class HistoryModuleTest[M <: HistoryModule](val module: M) extends AnyF
     val history3 = createHistory(0).add(Next(0, 0))
     val histories = List(history1, history2, history3)
     val maxHistory = histories.max
-     maxHistory shouldBe history1
+    maxHistory shouldBe history1
   }
 }

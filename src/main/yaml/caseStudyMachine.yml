@@ -3,32 +3,43 @@ incarnation: scafi
 variables:
   seed: &seed
     min: 1
-    max: 32
+    max: 8
     step: 1
-    default: 1
+    default: 2
   connection_range_percentage: &connection_range
     type: LinearVariable
     parameters: [ 0.25, 0.25, 1, 0.25 ]
   drones: &drones
     type: LinearVariable
-    parameters: [ 20, 20, 100, 20 ]
+    parameters: [ 20, 20, 40, 5 ]
   side_length: &side_length
-    formula: 100.0
+    formula: 50.0
   half_side_length: &half_side_length
     formula: side_length / 2.0
   negative_half_side_length: &negative_half_side_length
     formula: -1 * half_side_length
   connection_range: &connection_range
     formula: connection_range_percentage * side_length
+
+launcher:
+  parameters:
+    batch: [seed, drones, connection_range_percentage]
+    autoStart: true
+    showProgress: true
 environment:
   type: Continuous2DEnvironment
   parameters: [ ]
   global-programs:
     - time-distribution:
-        type: PredefinedTimeDistribution
-        parameters: [ [1.0, 100.0, 200.0] ]
+        type: DiracComb
+        parameters: [ 600, 0.001667 ]
       type: SpawnDanger
-      parameters: [ 3 ]
+      parameters: [ *side_length, 10.0, *drones ]
+    - time-distribution:
+        type: DiracComb
+        parameters: [ 1200, 0.000833 ]
+      type: BaseInAttack
+      parameters: [ ]
 
 seeds:
   scenario: *seed
@@ -50,13 +61,25 @@ _programs:
       - time-distribution: 1
         type: Event
         actions: { type: MoveToTarget, parameters: [ destination, 10 ] }
-
+  - base_solved: &base_solved
+      - time-distribution: 1
+        type: Event
+        actions:
+        - type: DefendingBase
+          parameters: [ 10, *drones]
 deployments:
   - type: Point
     parameters: [0, 0]
     contents:
       - molecule: base
         concentration: true
+      - molecule: attacked
+        concentration: false
+      - molecule: defended
+        concentration: false
+      - molecule: alarm
+        concentration: false
+    programs: [ *base_solved ]
   # Bounds
   - type: Point
     parameters: [ 0, *negative_half_side_length ]
@@ -89,11 +112,26 @@ export:
   - type: CSVExporter
     parameters:
       fileNameRoot: simulation
-      interval: 1
+      interval: 10
       exportPath: data
     data:
       - time
-      - molecule: "state"
-        aggregators: [mean, min, max]
+      - molecule: "wandering"
+        aggregators: [mean]
+        value-filter: onlyfinite
+      - molecule: "defending"
+        aggregators: [mean]
+        value-filter: onlyfinite
+      - molecule: "wait"
+        aggregators: [mean]
+        value-filter: onlyfinite
+      - molecule: "attacked"
+        aggregators: [max]
+        value-filter: onlyfinite
+      - molecule: "alarm"
+        aggregators: [max]
         value-filter: onlyfinite
 
+terminate:
+  type: AfterTime
+  parameters: 6000

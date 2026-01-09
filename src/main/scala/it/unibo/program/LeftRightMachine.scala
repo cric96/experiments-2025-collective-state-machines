@@ -1,13 +1,14 @@
 package it.unibo.program
 
-import it.unibo.alchemist.model.scafi.ScafiIncarnationForAlchemist.{AggregateProgram, ScafiAlchemistSupport, StandardSensors}
+import it.unibo.alchemist.model.scafi.ScafiIncarnationForAlchemist.{
+  AggregateProgram,
+  ScafiAlchemistSupport,
+  StandardSensors
+}
 import it.unibo.cfsm.Next.AnyToNext
 import it.unibo.cfsm.{BoundedHistory, CollectiveFSM, PlainHistory}
 
-class LeftRightMachine extends AggregateProgram
-  with StandardSensors
-  with ScafiAlchemistSupport
-  with CollectiveFSM {
+class LeftRightMachine extends AggregateProgram with StandardSensors with ScafiAlchemistSupport with CollectiveFSM {
 
   implicit def historyModule =
     BoundedHistory.create(() => alchemistTimestamp.toDouble, maxLife = 10)
@@ -18,10 +19,10 @@ class LeftRightMachine extends AggregateProgram
 
   override def main(): Any = {
     val state = cfsm(waitState) { current =>
-      if(current == waitState) {
-        if(senseLeft) {
+      if (current == waitState) {
+        if (senseLeft) {
           leftSide --> 2.0
-        } else if(senseRight) {
+        } else if (senseRight) {
           rightSide --> 1.0
         } else {
           waitState

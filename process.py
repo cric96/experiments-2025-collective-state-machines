@@ -187,10 +187,10 @@ if __name__ == '__main__':
     experiments = ['simulation']
     floatPrecision = '{: 0.3f}'
     # Number of time samples 
-    timeSamples = 100
+    timeSamples = 1000
     # time management
     minTime = 0
-    maxTime = 10
+    maxTime = 6000
     timeColumnName = 'time'
     logarithmicTime = False
     # One or more variables are considered random and "flattened"

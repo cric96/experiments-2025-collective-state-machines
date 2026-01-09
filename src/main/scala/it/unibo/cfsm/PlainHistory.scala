@@ -12,8 +12,7 @@ object PlainHistory extends HistoryModule {
 
   def add[S: Ordering](history: PlainHistory[S], next: Next[S]): PlainHistory[S] = {
     history.transitions match {
-      case last :: previous :: tail
-        if Next.same(last, previous) => //&& Next.same(last, next) =>
+      case last :: previous :: tail if Next.same(last, previous) => // && Next.same(last, next) =>
         history.copy(transitions = next :: previous :: tail)
       case _ =>
         history.copy(transitions = next :: history.transitions)
@@ -25,22 +24,18 @@ object PlainHistory extends HistoryModule {
 
   def replaceWhenLooping[S: Ordering](history: PlainHistory[S], next: Next[S]): PlainHistory[S] = {
     history.transitions match {
-      case last :: previous :: tail
-        if Next.same(last, previous) && Next.same(next, last) =>
+      case last :: previous :: tail if Next.same(last, previous) && Next.same(next, last) =>
         history.copy(transitions = next :: previous :: tail)
       case _ => history
     }
   }
 
-  def max[S: Ordering](h1: PlainHistory[S], h2: PlainHistory[S]): PlainHistory[S] = {
+  def max[S: Ordering](h1: PlainHistory[S], h2: PlainHistory[S]): PlainHistory[S] =
     if (historyOrdering[S].gt(h1, h2)) h1 else h2
-  }
 
-  def render[S: Ordering](history: PlainHistory[S]): String = {
-    s"H ~ ${(history.transitions.map(s => s"$s)")).reverse.mkString(" -> ")}"
-  }
+  def render[S: Ordering](history: PlainHistory[S]): String =
+    s"H ~ ${history.transitions.map(s => s"$s)").reverse.mkString(" -> ")}"
 
-  implicit def historyOrdering[S: Ordering]: Ordering[PlainHistory[S]] = {
+  implicit def historyOrdering[S: Ordering]: Ordering[PlainHistory[S]] =
     Ordering.by[PlainHistory[S], List[Next[S]]](_.transitions.reverse)
-  }
 }
