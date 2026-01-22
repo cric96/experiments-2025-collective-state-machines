@@ -17,7 +17,7 @@ object Next {
     Ordering.by[Next[S], (Double, S)](s => (s.priority, s.state))
   // auto conversion from S to State[S] with minimum priority
   implicit def fromState[S: Ordering](s: S): Next[S] =
-    Next[S](s, Double.NegativeInfinity)
+    Next[S](s, Double.MinValue)
 
   implicit class AnyToNext[S: Ordering](val s: S) {
     def -->(priority: Double): Next[S] =

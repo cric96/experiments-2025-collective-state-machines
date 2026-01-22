@@ -24,7 +24,7 @@ object BoundedHistory {
     def createHistory[S: Ordering](initial: S): BoundedHistory[S] =
       BoundedHistory(0, List((timestampGenerator.current(), first(initial))))
 
-    def first[S: Ordering](state: S): Next[S] = Next(state, Double.PositiveInfinity)
+    def first[S: Ordering](state: S): Next[S] = Next(state, Double.MinValue)
 
     def add[S: Ordering](history: BoundedHistory[S], next: Next[S]): BoundedHistory[S] = {
       val timestamp = timestampGenerator.current()
@@ -46,7 +46,6 @@ object BoundedHistory {
       } else history.transitions.take(2)
       val wildcardsToAdd = history.transitions.size - newTransitions.size
       history.copy(history.wildcards + wildcardsToAdd, newTransitions)
-
     }
 
     def current[S: Ordering](history: BoundedHistory[S]): Next[S] =
@@ -80,5 +79,7 @@ object BoundedHistory {
         transitionsOrdering.compare(nx, ny)
       }
     }
+
+    override def size[S: Ordering](history: BoundedHistory[S]): Double = history.transitions.size + 1
   }
 }

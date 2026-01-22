@@ -8,7 +8,7 @@ object PlainHistory extends HistoryModule {
 
   def createHistory[S: Ordering](initial: S): H[S] = PlainHistory(List(first(initial)))
 
-  def first[S: Ordering](state: S): Next[S] = Next(state, Double.PositiveInfinity)
+  def first[S: Ordering](state: S): Next[S] = Next(state, Double.MinValue)
 
   def add[S: Ordering](history: PlainHistory[S], next: Next[S]): PlainHistory[S] = {
     history.transitions match {
@@ -38,4 +38,6 @@ object PlainHistory extends HistoryModule {
 
   implicit def historyOrdering[S: Ordering]: Ordering[PlainHistory[S]] =
     Ordering.by[PlainHistory[S], List[Next[S]]](_.transitions.reverse)
+
+  override def size[S: Ordering](history: PlainHistory[S]): Double = history.transitions.size
 }

@@ -1,10 +1,10 @@
 package it.unibo.alchemist.model.implementations.reactions
 
-import it.unibo.alchemist.model.molecules.{MoleculeConstants, SimpleMolecule}
+import it.unibo.alchemist.model.molecules.MoleculeConstants
 import it.unibo.alchemist.model.nodes.GenericNode
 import it.unibo.alchemist.model.reactions.Event
 import it.unibo.alchemist.model.timedistributions.DiracComb
-import it.unibo.alchemist.model.{Environment, Node, Position, Reaction, TimeDistribution}
+import it.unibo.alchemist.model.{Environment, Position, TimeDistribution}
 import org.apache.commons.math3.random.RandomGenerator
 
 class SpawnDanger[T, P <: Position[P]](
@@ -18,7 +18,7 @@ class SpawnDanger[T, P <: Position[P]](
   lazy val base = nodes.filter(_.contains(MoleculeConstants.BASE)).head
 
   override protected def executeBeforeUpdateDistribution(): Unit = {
-    if (!base.getConcentration(MoleculeConstants.ALARM).asInstanceOf[Boolean]) {
+    if (!anyProblemUnsolved) {
       val x = randomGenerator.nextDouble() * sideLength
       val y = randomGenerator.nextDouble() * sideLength - sideLength / 2
       val problemPosition = Array(x, y)
@@ -32,17 +32,16 @@ class SpawnDanger[T, P <: Position[P]](
       reaction.setActions(
         java.util.List.of(
           new SolvingProblemAction[T, P](
-            dangerNode,
-            environment,
-            reaction,
-            visionProblemRadius,
-            nodesNeededToSolve
+            dangerNode, environment, reaction, visionProblemRadius, nodesNeededToSolve
           )
         )
       )
       dangerNode.addReaction(reaction)
       environment.addNode(dangerNode, dangerPosition)
-      base.setConcentration(MoleculeConstants.ALARM, true.asInstanceOf[T])
     }
+  }
+
+  def anyProblemUnsolved: Boolean = nodes.exists { node =>
+    node.contains(MoleculeConstants.PROBLEM)
   }
 }

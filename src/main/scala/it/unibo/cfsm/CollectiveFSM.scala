@@ -7,7 +7,11 @@ trait CollectiveFSM {
     import module._ // operations
     share(module.createHistory[S](initial)) { (history, nbrHistory) =>
       val next = align(history.current.state)(logic(_))
-      node.put("history", module.render(history))
+      // node.put("history", module.render(history))
+      node.put("historySize", module.size(history))
+      // compute the byte footprint of the history
+      // all history
+      val histories = foldhood(Set.empty[module.H[S]])(_ ++ _)(Set(nbrHistory()))
       foldhood[module.H[S]](history.add(next))(module.max)(nbrHistory())
         .replaceWhenLooping(next)
     }.current.state

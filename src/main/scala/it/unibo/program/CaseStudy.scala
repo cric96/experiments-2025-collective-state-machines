@@ -15,8 +15,10 @@ class CaseStudy
     extends MacroSwarmProgram
     with StandardSensors
     with TimeUtils
+    with FieldUtils
     with PatternFormationLib
     with BlocksWithShare
+    with BlockS
     with BlocksWithGC
     with ProcessFix
     with CustomSpawn
@@ -25,13 +27,20 @@ class CaseStudy
     with ScafiAlchemistSupport
     with GPSMovement
     with CollectiveFSM
+    with LeaderBasedLib
+    with TeamFormationLib
     with MacroswarmFix {
   import CaseStudy._
-  implicit def historyModule = BoundedHistory.create(() => alchemistTimestamp.toDouble, maxLife = 10000)
+
+  implicit def historyModule = {
+    val maxLife = sense[Int]("historyLength")
+    BoundedHistory.create(() => alchemistTimestamp.toDouble, maxLife = maxLife)
+  }
 
   private lazy val bound = sense[Double]("side") / 2.0
+  private lazy val visionRange = sense[Double]("visionRange")
   private lazy val visionBaseRange = 10 // inside the square
-  private lazy val visionProblemRange = 100.0 * 0.25 // smaller vision
+  private lazy val visionProblemRange = 25
   private lazy val initialPosition = currentPosition()
 
   private def bottom: Point3D = Point3D(0, -bound, 0.0)
@@ -41,7 +50,7 @@ class CaseStudy
     val basePosition = initialPosition
     val result = cfsm[MovementState](Wait()) {
       case Wait() => handlingWaiting(basePosition)
-      case Wandering() => handleExploring()
+      case Wandering() => handleWandering()
       case Defending() => handlingDefending(basePosition)
       case Solving() => handlingSolving()
     }
@@ -49,15 +58,23 @@ class CaseStudy
     result.velocity
   }
 
-  private def handleExploring(): Next[MovementState] = {
+  private def handleWandering(): Next[MovementState] = {
+    import CaseStudy._
     val velocity = explore(bottom, top, maxVelocity = 1.0)
+    val leader = S(Double.PositiveInfinity, nbrRange)
+    val computedVelocity = rep(Point3D.Zero) { velocity =>
+      val separationForce = computeSeparationForce()
+      val toLeader = sinkAt(leader)
+      val targetVel = (separationForce * SEPARATION_WEIGHT + toLeader * COHESION_WEIGHT).normalize
+      smoothVelocity(velocity, targetVel)
+    }
     Wandering().updateVelocity(velocity)
     if (baseAttacked) {
       Defending()
     } else if (anyProblemFound) {
       Solving()
     } else {
-      Wandering().updateVelocity(velocity)
+      Wandering().updateVelocity(mux(leader)(velocity / 2)(computedVelocity))
     }
   }
 
@@ -81,10 +98,20 @@ class CaseStudy
   }
 
   private def handlingSolving(): Next[MovementState] = {
-    val goalPosition = broadcast(positionOfProblem.isDefined, positionOfProblem.getOrElse(currentPosition()))
-    val movement = rep(Point3D.Zero)(oldVelocity =>
-      (goto(goalPosition) + separation(oldVelocity, OneHopNeighbourhoodWithinRange(2)) * 2).normalize
-    )
+    import CaseStudy._
+    val goalPosition = broadcast(positionOfProblem.isDefined, positionOfProblem)
+    val movement = rep(Point3D.Zero) { oldVelocity =>
+      val separationForce = computeSeparationForce(SEPARATION_RADIUS_SOLVING)
+      goalPosition match {
+        case None =>
+          val wanderVelocity = explore(bottom, top, maxVelocity = 1.0)
+          val targetVel = (separationForce * SEPARATION_MULTIPLIER + wanderVelocity).normalize
+          smoothVelocity(oldVelocity, targetVel)
+        case Some(target) =>
+          val targetVel = (goto(target) + separationForce * SEPARATION_MULTIPLIER).normalize
+          smoothVelocity(oldVelocity, targetVel)
+      }
+    }
     if (isSolved) {
       Wait()
     } else {
@@ -94,33 +121,68 @@ class CaseStudy
 
   private def updateStats(state: MovementState): Unit = {
     node.put("hue", state.numeric * 5)
+    node.put("state", state.numeric)
     MoleculeConstants.updateState(alchemistEnvironment.getNodeByID(mid()), state)
   }
 
   // External sensors
   private def anyAlarm: Boolean =
-    ExternalSensors.anyAlarm(alchemistEnvironment, mid(), visionBaseRange)
+    ExternalSensors.anyAlarm(alchemistEnvironment, mid())
 
   private def anyProblemFound: Boolean =
-    ExternalSensors.anyProblemFound(alchemistEnvironment, mid(), visionProblemRange)
+    ExternalSensors.anyProblemFound(alchemistEnvironment, mid())
 
   private def positionOfProblem: Option[Point3D] =
-    ExternalSensors.positionOfProblem(alchemistEnvironment, mid(), visionProblemRange)
+    ExternalSensors.positionOfProblem(alchemistEnvironment, mid())
 
   private def baseAttacked: Boolean =
-    ExternalSensors.baseAttacked(alchemistEnvironment, mid(), visionBaseRange)
+    ExternalSensors.baseAttacked(alchemistEnvironment, mid())
 
   private def baseDefended: Boolean =
-    ExternalSensors.baseDefended(alchemistEnvironment, mid(), visionBaseRange)
+    ExternalSensors.baseDefended(alchemistEnvironment, mid())
 
   private def isSolved: Boolean =
-    ExternalSensors.isSolved(alchemistEnvironment, mid(), visionProblemRange)
+    ExternalSensors.isSolved(alchemistEnvironment, mid())
 
   private def nodes: Seq[Node[Any]] =
     alchemistEnvironment.getNodes.iterator().asScala.toSeq
+
+  private def computeSeparationForce(separationRadius: Double = SEPARATION_RADIUS): Point3D = {
+    import CaseStudy._
+    foldhood(Point3D.Zero)(_ + _) {
+      val dist = Math.max(nbrRange(), MIN_DISTANCE)
+      val vec = nbrVector()
+
+      mux(dist < separationRadius && mid() != nbr(mid())) {
+        val strength = (separationRadius / dist) * (separationRadius / dist)
+        val awayDir = mux(vec.module > VECTOR_MODULE_THRESHOLD)(-vec.normalize)(brownian(1.0).normalize)
+        awayDir * strength
+      } {
+        Point3D.Zero
+      }
+    }
+  }
+
+  /** Smoothly blends previous velocity with target velocity */
+  private def smoothVelocity(previousVelocity: Point3D, targetVelocity: Point3D): Point3D =
+    previousVelocity * (1 - CaseStudy.SMOOTHING_FACTOR) + targetVelocity * CaseStudy.SMOOTHING_FACTOR
 }
 
 object CaseStudy {
+  // Separation behavior constants
+  val SEPARATION_RADIUS: Double = 5.0
+  val SEPARATION_RADIUS_SOLVING: Double = 2.0
+  val MIN_DISTANCE: Double = 0.5
+  val VECTOR_MODULE_THRESHOLD: Double = 0.01
+
+  // Force weighting constants
+  val SEPARATION_WEIGHT: Double = 1.5
+  val COHESION_WEIGHT: Double = 0.5
+  val SEPARATION_MULTIPLIER: Double = 2.0
+
+  // Smoothing constants
+  val SMOOTHING_FACTOR: Double = 0.3
+
   sealed trait MovementState extends EqualsUsingOrdering[MovementState] {
     var velocity: Point3D = Point3D.Zero
     def updateVelocity(v: Point3D): MovementState = {

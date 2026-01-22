@@ -3,15 +3,23 @@ incarnation: scafi
 variables:
   seed: &seed
     min: 1
-    max: 8
+    max: 64
     step: 1
     default: 2
   connection_range_percentage: &connection_range
     type: LinearVariable
-    parameters: [ 0.25, 0.25, 1, 0.25 ]
-  drones: &drones
-    type: LinearVariable
-    parameters: [ 20, 20, 40, 5 ]
+    parameters: [ 0.15, 0.15, 0.5, 0.05 ]
+  variability: &variability
+    type: ArbitraryVariable
+    parameters: [ 3.0, [ 3.0, 5.0, 10.0 ] ]
+  history_length: &history_length
+    type: ArbitraryVariable
+    parameters: [ 1200, [1200, 6000] ]
+  #drones: &drones
+  #  type: LinearVariable
+  #  parameters: [ 40, 20, 40, 5 ]
+  drones: &drones 40
+
   side_length: &side_length
     formula: 50.0
   half_side_length: &half_side_length
@@ -20,10 +28,21 @@ variables:
     formula: -1 * half_side_length
   connection_range: &connection_range
     formula: connection_range_percentage * side_length
+  half_connection_range: &half_connection_range
+    formula: -connection_range / 2.0
 
+  base_vision_range: &base_vision_range
+    formula: 10.0
+  problem_vision_range: &problem_vision_range
+    formula: 25.0
 launcher:
   parameters:
-    batch: [seed, drones, connection_range_percentage]
+    batch:
+      - seed
+      #- drones
+      - connection_range_percentage
+      - history_length
+      - variability
     autoStart: true
     showProgress: true
 environment:
@@ -32,13 +51,18 @@ environment:
   global-programs:
     - time-distribution:
         type: DiracComb
-        parameters: [ 600, 0.001667 ]
+        parameters: [ 1200, 0.000833 ]
       type: SpawnDanger
       parameters: [ *side_length, 10.0, *drones ]
     - time-distribution:
         type: DiracComb
-        parameters: [ 1200, 0.000833 ]
+        parameters: [ 2400, 0.000417 ]
       type: BaseInAttack
+      parameters: [ ]
+    - time-distribution:
+        type: DiracComb
+        parameters: [ 600, 0.000833 ]
+      type: Alarm
       parameters: [ ]
 
 seeds:
@@ -46,26 +70,28 @@ seeds:
   simulation: *seed
 
 network-model:
-  type: ConnectWithinDistance
-  parameters: [*connection_range]
+  type: AdHocConnectionScenario
+  parameters: [*connection_range, *problem_vision_range, *base_vision_range]
 
 _programs:
   - program: &program # MacroSwarm program, executed every second
-      - time-distribution: 1
+      - time-distribution:
+          type: WeibullTimeSimplified
+          parameters: [*variability, 1.0, 0.0 ]
         type: Event
         actions:
           - type: RunScafiProgram
-            parameters: [ it.unibo.program.CaseStudy, 1.0]
+            parameters: [ it.unibo.program.CaseStudy, 3.0]
       - program: send
   - move: &move # Related actuation, executed every second
       - time-distribution: 1
         type: Event
-        actions: { type: MoveToTarget, parameters: [ destination, 10 ] }
+        actions: { type: MoveToTarget, parameters: [ destination, 5.0 ] }
   - base_solved: &base_solved
       - time-distribution: 1
         type: Event
         actions:
-        - type: DefendingBase
+        - type: DefendingBaseAction
           parameters: [ 10, *drones]
 deployments:
   - type: Point
@@ -104,15 +130,21 @@ deployments:
   - type: Rectangle
     parameters: [*drones, -5, -5, 10, 10]
     contents:
+      - molecule: drone
+        concentration: true
       - molecule: side
         concentration: *side_length
+      - molecule: visionRange
+        concentration: *connection_range
+      - molecule: historyLength
+        concentration: *history_length
     programs: [ *program, *move ] # Add the behaviour
 
 export:
   - type: CSVExporter
     parameters:
       fileNameRoot: simulation
-      interval: 10
+      interval: 1
       exportPath: data
     data:
       - time
@@ -120,6 +152,9 @@ export:
         aggregators: [mean]
         value-filter: onlyfinite
       - molecule: "defending"
+        aggregators: [mean]
+        value-filter: onlyfinite
+      - molecule: "solving"
         aggregators: [mean]
         value-filter: onlyfinite
       - molecule: "wait"
@@ -131,6 +166,11 @@ export:
       - molecule: "alarm"
         aggregators: [max]
         value-filter: onlyfinite
+      - molecule: "historySize"
+        aggregators: [mean]
+        value-filter: onlyfinite
+      - type: DisagreementRate
+        parameters: [ ]
 
 terminate:
   type: AfterTime
