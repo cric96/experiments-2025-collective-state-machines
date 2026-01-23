@@ -13,6 +13,7 @@ object MoleculeConstants {
   val ATTACKED = new SimpleMolecule("attacked")
   val DEFENDED = new SimpleMolecule("defended")
   val SOLVED = new SimpleMolecule("solved")
+  val READ = new SimpleMolecule("read")
   val STATE = new SimpleMolecule("state")
   def updateState[T](node: Node[T], state: CaseStudy.MovementState): Unit = {
     CaseStudy.allCases.values.foreach(molecule =>

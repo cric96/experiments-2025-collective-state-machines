@@ -1,0 +1,9 @@
+#####################################################################
+# Alchemist log file - simulation started at: 2026-01-23T16:52+0000 #
+#####################################################################
+#
+# seed = 4.0, connection_range_percentage = 0.15, variability = 10.0, history_length = 6000
+#
+# The columns have the following meaning: 
+# time wandering[mean] defending[mean] solving[mean] wait[mean] attacked[max] alarm[max] historySize[mean] disagreementRate 
+0.0 NaN NaN NaN NaN 0.0 0.0 NaN 0.0

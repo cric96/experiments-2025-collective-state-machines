@@ -20,7 +20,8 @@ object ExternalSensors {
 
   private def moleculeConcentration[T](node: Node[Any], molecule: Molecule): T =
     node.getConcentration(molecule).asInstanceOf[T]
-
+  private def writeMoleculeConcentration[T](node: Node[Any], molecule: Molecule, value: T): Unit =
+    node.setConcentration(molecule, value.asInstanceOf[Any])
   private def nodePosition(environment: Environment[Any, Position[_]], node: Node[Any]): Point3D = {
     val position = environment.getPosition(node)
     Point3D(position.getCoordinate(0), position.getCoordinate(1), 0.0)
@@ -45,6 +46,16 @@ object ExternalSensors {
     findNodeWithMolecule(environment, nodeId, MoleculeConstants.BASE)
       .exists(moleculeConcentration[Boolean](_, MoleculeConstants.DEFENDED))
 
-  def isSolved(environment: Environment[Any, Position[_]], nodeId: Int): Boolean =
-    nodesWithinRange(environment, nodeId).exists(_.contains(MoleculeConstants.SOLVED))
+  def isSolved(environment: Environment[Any, Position[_]], nodeId: Int): Boolean = {
+    val result = nodesWithinRange(environment, nodeId).find(_.contains(MoleculeConstants.SOLVED))
+    result match {
+      case Some(node) =>
+        writeMoleculeConcentration(node, MoleculeConstants.READ, true)
+        val base = environment.getNodes.asScala.toList
+          .filter(_.contains(MoleculeConstants.BASE))
+          .foreach(b => writeMoleculeConcentration(b, MoleculeConstants.ALARM, false))
+      case None => ()
+    }
+    result.nonEmpty
+  }
 }

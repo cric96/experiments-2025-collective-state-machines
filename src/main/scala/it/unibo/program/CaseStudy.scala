@@ -39,8 +39,6 @@ class CaseStudy
 
   private lazy val bound = sense[Double]("side") / 2.0
   private lazy val visionRange = sense[Double]("visionRange")
-  private lazy val visionBaseRange = 10 // inside the square
-  private lazy val visionProblemRange = 25
   private lazy val initialPosition = currentPosition()
 
   private def bottom: Point3D = Point3D(0, -bound, 0.0)
@@ -62,10 +60,14 @@ class CaseStudy
     import CaseStudy._
     val velocity = explore(bottom, top, maxVelocity = 1.0)
     val leader = S(Double.PositiveInfinity, nbrRange)
+    val leaderVelocity = alignWithLeader(leader, velocity)
     val computedVelocity = rep(Point3D.Zero) { velocity =>
-      val separationForce = computeSeparationForce()
+      val separationForce = computeSeparationForce(Math.min(visionRange * 0.75, SEPARATION_RADIUS))
       val toLeader = sinkAt(leader)
-      val targetVel = (separationForce * SEPARATION_WEIGHT + toLeader * COHESION_WEIGHT).normalize
+      val alignmentForce = leaderVelocity.normalize
+      val targetVel = (separationForce * SEPARATION_WEIGHT
+        + toLeader * COHESION_WEIGHT
+        + alignmentForce * ALIGNMENT_WEIGHT).normalize
       smoothVelocity(velocity, targetVel)
     }
     Wandering().updateVelocity(velocity)
@@ -105,10 +107,10 @@ class CaseStudy
       goalPosition match {
         case None =>
           val wanderVelocity = explore(bottom, top, maxVelocity = 1.0)
-          val targetVel = (separationForce * SEPARATION_MULTIPLIER + wanderVelocity).normalize
+          val targetVel = (separationForce * SEPARATION_WEIGHT + wanderVelocity).normalize
           smoothVelocity(oldVelocity, targetVel)
         case Some(target) =>
-          val targetVel = (goto(target) + separationForce * SEPARATION_MULTIPLIER).normalize
+          val targetVel = (goto(target) + separationForce * SEPARATION_WEIGHT).normalize
           smoothVelocity(oldVelocity, targetVel)
       }
     }
@@ -144,9 +146,6 @@ class CaseStudy
   private def isSolved: Boolean =
     ExternalSensors.isSolved(alchemistEnvironment, mid())
 
-  private def nodes: Seq[Node[Any]] =
-    alchemistEnvironment.getNodes.iterator().asScala.toSeq
-
   private def computeSeparationForce(separationRadius: Double = SEPARATION_RADIUS): Point3D = {
     import CaseStudy._
     foldhood(Point3D.Zero)(_ + _) {
@@ -170,15 +169,14 @@ class CaseStudy
 
 object CaseStudy {
   // Separation behavior constants
-  val SEPARATION_RADIUS: Double = 5.0
+  val SEPARATION_RADIUS: Double = 12.5
   val SEPARATION_RADIUS_SOLVING: Double = 2.0
   val MIN_DISTANCE: Double = 0.5
   val VECTOR_MODULE_THRESHOLD: Double = 0.01
-
   // Force weighting constants
   val SEPARATION_WEIGHT: Double = 1.5
   val COHESION_WEIGHT: Double = 0.5
-  val SEPARATION_MULTIPLIER: Double = 2.0
+  val ALIGNMENT_WEIGHT = 0.5
 
   // Smoothing constants
   val SMOOTHING_FACTOR: Double = 0.3

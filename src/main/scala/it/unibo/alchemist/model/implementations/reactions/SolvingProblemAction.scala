@@ -2,6 +2,7 @@ package it.unibo.alchemist.model.implementations.reactions
 
 import it.unibo.alchemist.model.{Action, Context, Environment, Node, Position, Reaction}
 import it.unibo.alchemist.model.molecules.MoleculeConstants
+import it.unibo.program.CaseStudy.Solving
 
 import scala.jdk.CollectionConverters.CollectionHasAsScala
 
@@ -16,11 +17,17 @@ class SolvingProblemAction[T, P <: Position[P]](
   lazy val base =
     environment.getNodes.asScala.toList.filter(_.contains(MoleculeConstants.BASE)).head
 
+  lazy val drones =
+    environment.getNodes.asScala.toList.filter(_.contains(MoleculeConstants.IS_DRONE))
   override def cloneAction(node: Node[T], reaction: Reaction[T]): Action[T] =
     new SolvingProblemAction(node, environment, reaction, solvingRadius, nodesNeededToSolve)
 
   override def execute(): Unit = {
-    if (node.getConcentration(MoleculeConstants.SOLVED).asInstanceOf[Boolean]) {
+    if (
+      node.getConcentration(MoleculeConstants.SOLVED).asInstanceOf[Boolean] && node
+        .getConcentration(MoleculeConstants.READ)
+        .asInstanceOf[Boolean]
+    ) {
       node.removeReaction(reaction)
       environment.getSimulation.reactionRemoved(reaction)
       environment.removeNode(node)

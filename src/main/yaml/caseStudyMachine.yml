@@ -5,16 +5,16 @@ variables:
     min: 1
     max: 64
     step: 1
-    default: 2
-  connection_range_percentage: &connection_range
+    default: 4
+  connection_range_percentage: &connection_range_percentage
     type: LinearVariable
-    parameters: [ 0.15, 0.15, 0.5, 0.05 ]
+    parameters: [ 0.15, 0.15, 0.35, 0.05 ]
   variability: &variability
     type: ArbitraryVariable
-    parameters: [ 3.0, [ 3.0, 5.0, 10.0 ] ]
+    parameters: [ 10.0, [ 3.0, 4.0, 5.0, 10.0 ] ]
   history_length: &history_length
     type: ArbitraryVariable
-    parameters: [ 1200, [1200, 6000] ]
+    parameters: [ 6000, [1200, 6000] ]
   #drones: &drones
   #  type: LinearVariable
   #  parameters: [ 40, 20, 40, 5 ]
@@ -51,17 +51,17 @@ environment:
   global-programs:
     - time-distribution:
         type: DiracComb
-        parameters: [ 1200, 0.000833 ]
+        parameters: [ 1200, 0.000714 ]
       type: SpawnDanger
-      parameters: [ *side_length, 10.0, *drones ]
+      parameters: [ *side_length, 10.0, *drones, *base_vision_range ]
     - time-distribution:
         type: DiracComb
-        parameters: [ 2400, 0.000417 ]
+        parameters: [ 2400, 0.000357 ]
       type: BaseInAttack
       parameters: [ ]
     - time-distribution:
         type: DiracComb
-        parameters: [ 600, 0.000833 ]
+        parameters: [ 600, 0.000714 ]
       type: Alarm
       parameters: [ ]
 
@@ -104,6 +104,8 @@ deployments:
       - molecule: defended
         concentration: false
       - molecule: alarm
+        concentration: false
+      - molecule: read
         concentration: false
     programs: [ *base_solved ]
   # Bounds

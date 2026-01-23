@@ -60,6 +60,28 @@
     }
   },
   {
+    "type": "class it.unibo.alchemist.boundary.gui.effects.DrawDirectedNode",
+    "trackEnabled": false,
+    "snapshotSize": {
+      "max": 1000,
+      "min": 10,
+      "val": 140
+    },
+    "timespan": {
+      "max": 100,
+      "min": 1,
+      "val": 10
+    },
+    "nodeSize": {
+      "max": 20,
+      "min": 1,
+      "val": 10
+    },
+    "colorMolecule": "hue",
+    "velocityMolecule": "velocity",
+    "maxValue": ""
+  },
+  {
     "type": "class it.unibo.alchemist.boundary.gui.effects.DrawShape",
     "curIncarnation": "scafi",
     "mode": "FILL_RECTANGLE",
@@ -71,12 +93,12 @@
     "blue": {
       "max": 255,
       "min": 0,
-      "val": 0
+      "val": 127
     },
     "green": {
       "max": 255,
       "min": 0,
-      "val": 0
+      "val": 147
     },
     "alpha": {
       "max": 255,
@@ -116,30 +138,8 @@
       "val": 10
     },
     "colorCache": {
-      "value": -16777216
+      "value": -16739457
     }
-  },
-  {
-    "type": "class it.unibo.alchemist.boundary.gui.effects.DrawDirectedNode",
-    "trackEnabled": false,
-    "snapshotSize": {
-      "max": 1000,
-      "min": 10,
-      "val": 140
-    },
-    "timespan": {
-      "max": 100,
-      "min": 1,
-      "val": 10
-    },
-    "nodeSize": {
-      "max": 20,
-      "min": 1,
-      "val": 10
-    },
-    "colorMolecule": "hue",
-    "velocityMolecule": "velocity",
-    "maxValue": ""
   },
   {
     "type": "class it.unibo.alchemist.boundary.gui.effects.DrawShape",
@@ -199,6 +199,126 @@
     },
     "colorCache": {
       "value": -1
+    }
+  },
+  {
+    "type": "class it.unibo.alchemist.boundary.gui.effects.DrawShape",
+    "curIncarnation": "scafi",
+    "mode": "FILL_ELLIPSE",
+    "red": {
+      "max": 255,
+      "min": 0,
+      "val": 219
+    },
+    "blue": {
+      "max": 255,
+      "min": 0,
+      "val": 67
+    },
+    "green": {
+      "max": 255,
+      "min": 0,
+      "val": 41
+    },
+    "alpha": {
+      "max": 255,
+      "min": 0,
+      "val": 255
+    },
+    "scaleFactor": {
+      "max": 100,
+      "min": 0,
+      "val": 50
+    },
+    "size": {
+      "max": 100,
+      "min": 0,
+      "val": 44
+    },
+    "molFilter": true,
+    "molString": "problem",
+    "molPropertyFilter": false,
+    "property": "",
+    "writingPropertyValue": false,
+    "c": "ALPHA",
+    "reverse": false,
+    "propoom": {
+      "max": 10,
+      "min": -10,
+      "val": 0
+    },
+    "minprop": {
+      "max": 10,
+      "min": -10,
+      "val": 0
+    },
+    "maxprop": {
+      "max": 10,
+      "min": -10,
+      "val": 10
+    },
+    "colorCache": {
+      "value": -2414269
+    }
+  },
+  {
+    "type": "class it.unibo.alchemist.boundary.gui.effects.DrawShape",
+    "curIncarnation": "scafi",
+    "mode": "FILL_ELLIPSE",
+    "red": {
+      "max": 255,
+      "min": 0,
+      "val": 248
+    },
+    "blue": {
+      "max": 255,
+      "min": 0,
+      "val": 0
+    },
+    "green": {
+      "max": 255,
+      "min": 0,
+      "val": 147
+    },
+    "alpha": {
+      "max": 255,
+      "min": 0,
+      "val": 255
+    },
+    "scaleFactor": {
+      "max": 100,
+      "min": 0,
+      "val": 50
+    },
+    "size": {
+      "max": 100,
+      "min": 0,
+      "val": 33
+    },
+    "molFilter": true,
+    "molString": "problem",
+    "molPropertyFilter": false,
+    "property": "",
+    "writingPropertyValue": false,
+    "c": "ALPHA",
+    "reverse": false,
+    "propoom": {
+      "max": 10,
+      "min": -10,
+      "val": 0
+    },
+    "minprop": {
+      "max": 10,
+      "min": -10,
+      "val": 0
+    },
+    "maxprop": {
+      "max": 10,
+      "min": -10,
+      "val": 10
+    },
+    "colorCache": {
+      "value": -486656
     }
   }
 ]

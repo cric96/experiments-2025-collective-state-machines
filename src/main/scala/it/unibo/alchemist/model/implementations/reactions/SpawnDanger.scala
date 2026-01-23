@@ -13,18 +13,20 @@ class SpawnDanger[T, P <: Position[P]](
     randomGenerator: RandomGenerator,
     sideLength: Double,
     visionProblemRadius: Double,
-    nodesNeededToSolve: Int
+    nodesNeededToSolve: Int,
+    baseRadius: Double
 ) extends AbstractGlobalReaction[T, P](environment, distribution) {
   lazy val base = nodes.filter(_.contains(MoleculeConstants.BASE)).head
 
   override protected def executeBeforeUpdateDistribution(): Unit = {
     if (!anyProblemUnsolved) {
-      val x = randomGenerator.nextDouble() * sideLength
+      val x = (randomGenerator.nextDouble() * sideLength) + baseRadius
       val y = randomGenerator.nextDouble() * sideLength - sideLength / 2
       val problemPosition = Array(x, y)
       val dangerPosition = environment.makePosition(problemPosition)
       val dangerNode = new GenericNode(environment.getIncarnation, environment)
       dangerNode.setConcentration(MoleculeConstants.PROBLEM, true.asInstanceOf[T])
+      dangerNode.setConcentration(MoleculeConstants.READ, false.asInstanceOf[T])
       val reaction = new Event[T](
         dangerNode,
         new DiracComb(environment.getSimulation.getTime, 1)
