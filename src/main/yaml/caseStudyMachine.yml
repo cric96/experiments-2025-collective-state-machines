@@ -32,9 +32,9 @@ variables:
     formula: -connection_range / 2.0
 
   base_vision_range: &base_vision_range
-    formula: 15
+    formula: 17.5
   problem_vision_range: &problem_vision_range
-    formula: 15
+    formula: 17.5
 launcher:
   parameters:
     batch:
