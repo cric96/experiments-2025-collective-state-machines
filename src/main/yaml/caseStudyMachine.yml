@@ -11,7 +11,7 @@ variables:
     parameters: [ 0.2, 0.2, 0.35, 0.05 ]
   variability: &variability
     type: ArbitraryVariable
-    parameters: [ 10.0, [ 3.0, 4.0, 5.0, 10.0 ] ]
+    parameters: [ 10.0, [ 4.0, 7.0, 10.0 ] ]
   history_length: &history_length
     type: ArbitraryVariable
     parameters: [ 6000, [1200, 6000] ]

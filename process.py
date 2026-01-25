@@ -1033,6 +1033,7 @@ def plot_states_by_variability(means_data, connection_range_percentage, stdevs_d
 
         # variability-colored lines
         for var in variabilities:
+            if var==3: continue
             y = ds_avg[v].sel(variability=var).values
             if is_disagreement:
                 y = (y > 0).astype(int)
