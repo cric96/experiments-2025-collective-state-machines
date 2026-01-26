@@ -7,6 +7,9 @@ import it.unibo.alchemist.model.{Actionable, Environment, Time}
 import java.util
 import scala.jdk.CollectionConverters.CollectionHasAsScala
 
+/** An extractor that computes the disagreement rate among nodes in the environment. The disagreement rate is defined as
+  * the ratio of pairs of nodes that have different states to the total number of pairs of nodes.
+  */
 class DisagreementRate extends Extractor[Double] {
 
   override def getColumnNames: util.List[String] = util.Arrays.asList("disagreementRate")

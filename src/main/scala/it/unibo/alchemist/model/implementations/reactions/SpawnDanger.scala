@@ -7,6 +7,27 @@ import it.unibo.alchemist.model.timedistributions.DiracComb
 import it.unibo.alchemist.model.{Environment, Position, TimeDistribution}
 import org.apache.commons.math3.random.RandomGenerator
 
+/** A reaction that spawns a danger (problem) in the environment if there are no unsolved problems.
+  *
+  * @param environment
+  *   the environment where the reaction takes place
+  * @param distribution
+  *   the time distribution of the reaction
+  * @param randomGenerator
+  *   the random generator used to generate problem positions
+  * @param sideLength
+  *   the side length of the area where problems can be spawned
+  * @param visionProblemRadius
+  *   the radius around the problem to consider for solving
+  * @param nodesNeededToSolve
+  *   the number of nodes needed to solve the problem
+  * @param baseRadius
+  *   the radius around the base where problems cannot be spawned
+  * @tparam T
+  *   the concentration type
+  * @tparam P
+  *   the position type
+  */
 class SpawnDanger[T, P <: Position[P]](
     environment: Environment[T, P],
     distribution: TimeDistribution[T],
@@ -16,7 +37,7 @@ class SpawnDanger[T, P <: Position[P]](
     nodesNeededToSolve: Int,
     baseRadius: Double
 ) extends AbstractGlobalReaction[T, P](environment, distribution) {
-  lazy val base = nodes.filter(_.contains(MoleculeConstants.BASE)).head
+  lazy val base = nodes.filter(_.contains(MoleculeConstants.IS_BASE)).head
 
   override protected def executeBeforeUpdateDistribution(): Unit = {
     if (!anyProblemUnsolved) {
@@ -25,7 +46,7 @@ class SpawnDanger[T, P <: Position[P]](
       val problemPosition = Array(x, y)
       val dangerPosition = environment.makePosition(problemPosition)
       val dangerNode = new GenericNode(environment.getIncarnation, environment)
-      dangerNode.setConcentration(MoleculeConstants.PROBLEM, true.asInstanceOf[T])
+      dangerNode.setConcentration(MoleculeConstants.IS_PROBLEM, true.asInstanceOf[T])
       dangerNode.setConcentration(MoleculeConstants.READ, false.asInstanceOf[T])
       val reaction = new Event[T](
         dangerNode,
@@ -43,7 +64,7 @@ class SpawnDanger[T, P <: Position[P]](
     }
   }
 
-  def anyProblemUnsolved: Boolean = nodes.exists { node =>
-    node.contains(MoleculeConstants.PROBLEM)
+  private def anyProblemUnsolved: Boolean = nodes.exists { node =>
+    node.contains(MoleculeConstants.IS_PROBLEM)
   }
 }

@@ -28,22 +28,22 @@ object ExternalSensors {
   }
 
   def anyAlarm(environment: Environment[Any, Position[_]], nodeId: Int): Boolean =
-    findNodeWithMolecule(environment, nodeId, MoleculeConstants.ALARM)
-      .exists(moleculeConcentration[Boolean](_, MoleculeConstants.ALARM))
+    findNodeWithMolecule(environment, nodeId, MoleculeConstants.IS_ALARM)
+      .exists(moleculeConcentration[Boolean](_, MoleculeConstants.IS_ALARM))
 
   def anyProblemFound(environment: Environment[Any, Position[_]], nodeId: Int): Boolean =
-    nodesWithinRange(environment, nodeId).exists(_.contains(MoleculeConstants.PROBLEM))
+    nodesWithinRange(environment, nodeId).exists(_.contains(MoleculeConstants.IS_PROBLEM))
 
   def positionOfProblem(environment: Environment[Any, Position[_]], nodeId: Int): Option[Point3D] =
-    findNodeWithMolecule(environment, nodeId, MoleculeConstants.PROBLEM)
+    findNodeWithMolecule(environment, nodeId, MoleculeConstants.IS_PROBLEM)
       .map(nodePosition(environment, _))
 
   def baseAttacked(environment: Environment[Any, Position[_]], nodeId: Int): Boolean =
-    findNodeWithMolecule(environment, nodeId, MoleculeConstants.BASE)
-      .exists(moleculeConcentration[Boolean](_, MoleculeConstants.ATTACKED))
+    findNodeWithMolecule(environment, nodeId, MoleculeConstants.IS_BASE)
+      .exists(moleculeConcentration[Boolean](_, MoleculeConstants.IS_ATTACKED))
 
   def baseDefended(environment: Environment[Any, Position[_]], nodeId: Int): Boolean =
-    findNodeWithMolecule(environment, nodeId, MoleculeConstants.BASE)
+    findNodeWithMolecule(environment, nodeId, MoleculeConstants.IS_BASE)
       .exists(moleculeConcentration[Boolean](_, MoleculeConstants.DEFENDED))
 
   def isSolved(environment: Environment[Any, Position[_]], nodeId: Int): Boolean = {
@@ -52,8 +52,8 @@ object ExternalSensors {
       case Some(node) =>
         writeMoleculeConcentration(node, MoleculeConstants.READ, true)
         val base = environment.getNodes.asScala.toList
-          .filter(_.contains(MoleculeConstants.BASE))
-          .foreach(b => writeMoleculeConcentration(b, MoleculeConstants.ALARM, false))
+          .filter(_.contains(MoleculeConstants.IS_BASE))
+          .foreach(b => writeMoleculeConcentration(b, MoleculeConstants.IS_ALARM, false))
       case None => ()
     }
     result.nonEmpty

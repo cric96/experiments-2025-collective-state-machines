@@ -16,6 +16,17 @@ import org.danilopianini.util.{ListSet, ListSets}
 import scala.jdk.CollectionConverters.IteratorHasAsScala
 import java.util
 
+/** Abstract implementation of a global reaction. This is used to define reactions that affect the entire environment
+  * (e.g., global events/oracles).
+  * @param environment
+  *   the environment where the reaction takes place
+  * @param distribution
+  *   the time distribution of the reaction
+  * @tparam T
+  *   the concentration type
+  * @tparam P
+  *   the position type
+  */
 abstract class AbstractGlobalReaction[T, P <: Position[P]](
     val environment: Environment[T, P],
     distribution: TimeDistribution[T]

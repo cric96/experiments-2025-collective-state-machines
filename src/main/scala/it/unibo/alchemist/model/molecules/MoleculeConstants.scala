@@ -4,13 +4,13 @@ import it.unibo.alchemist.model.Node
 import it.unibo.program.CaseStudy
 
 object MoleculeConstants {
+  // Sensors (node type)
   val IS_DRONE = new SimpleMolecule("drone")
-  val IS_PROBLEM = new SimpleMolecule("problem")
   val IS_BASE = new SimpleMolecule("base")
-  val BASE = new SimpleMolecule("base")
-  val ALARM = new SimpleMolecule("alarm")
-  val PROBLEM = new SimpleMolecule("problem")
-  val ATTACKED = new SimpleMolecule("attacked")
+  val IS_ALARM = new SimpleMolecule("alarm")
+  val IS_PROBLEM = new SimpleMolecule("problem")
+  val IS_ATTACKED = new SimpleMolecule("attacked")
+  // States
   val DEFENDED = new SimpleMolecule("defended")
   val SOLVED = new SimpleMolecule("solved")
   val READ = new SimpleMolecule("read")

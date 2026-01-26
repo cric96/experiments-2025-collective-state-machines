@@ -6,6 +6,21 @@ import it.unibo.alchemist.model.neighborhoods.{Neighborhoods, SimpleNeighborhood
 
 import scala.jdk.CollectionConverters.{IterableHasAsJava, IteratorHasAsScala}
 
+/** A linking rule connecting drones, problems, and base stations within different ranges. It connects:
+  *   - Drones within `droneConnectionRange`
+  *   - Problems within `problemConnectionRange`
+  *   - Base stations within `baseConnectionRange`
+  * @param droneConnectionRange
+  *   the connection range for drones
+  * @param problemConnectionRange
+  *   the connection range for problems
+  * @param baseConnectionRange
+  *   the connection range for base stations
+  * @tparam T
+  *   the concentration type
+  * @tparam P
+  *   the position type
+  */
 class AdHocConnectionScenario[T, P <: Position[P]](
     droneConnectionRange: Double,
     problemConnectionRange: Double,
