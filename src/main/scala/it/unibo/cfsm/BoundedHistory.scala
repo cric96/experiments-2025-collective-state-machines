@@ -7,6 +7,16 @@ protected case class BoundedHistory[S: Ordering](
     transitions: List[(Double, Next[S])] = List()
 )
 
+/** A functional module to manage the history of states in a CFSM using a bounded list-based representation. This
+  * implementation of the HistoryModule trait limits the history size based on a maximum life duration. States older
+  * than the specified maxLife are discarded, helping to control memory usage. This, however, may lead to loss of
+  * historical information and lead to different behaviors compared to unbounded histories.
+  *
+  * In order to function properly, this module requires a TimeStampGenerator to provide current timestamps for state
+  * transitions and a maxLife parameter to define the maximum age of states to retain in the history.
+  *
+  * When maxLife is set to Double.PositiveInfinity, the behavior is equivalent to PlainHistory.
+  */
 object BoundedHistory {
   def create(timestampGenerator: TimeStampGenerator, maxLife: Double = Double.PositiveInfinity): BoundedHistoryModule =
     new BoundedHistoryModule(timestampGenerator, maxLife)

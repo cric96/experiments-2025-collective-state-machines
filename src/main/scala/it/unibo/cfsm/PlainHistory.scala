@@ -3,6 +3,10 @@ import scala.math.Ordering.Implicits.seqOrdering
 
 protected case class PlainHistory[S: Ordering](transitions: List[Next[S]] = List())
 
+/** A functional module to manage the history of states in a CFSM using a plain list-based representation. This is a
+  * simple implementation of the HistoryModule trait. It may lead to unbounded memory usage as the history grows
+  * indefinitely. Use with caution in scenarios where memory constraints are critical.
+  */
 object PlainHistory extends HistoryModule {
   type H[S] = PlainHistory[S]
 
@@ -12,7 +16,7 @@ object PlainHistory extends HistoryModule {
 
   def add[S: Ordering](history: PlainHistory[S], next: Next[S]): PlainHistory[S] = {
     history.transitions match {
-      case last :: previous :: tail if Next.same(last, previous) => // && Next.same(last, next) =>
+      case last :: previous :: tail if Next.same(last, previous) =>
         history.copy(transitions = next :: previous :: tail)
       case _ =>
         history.copy(transitions = next :: history.transitions)

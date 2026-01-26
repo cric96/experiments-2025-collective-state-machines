@@ -2,6 +2,15 @@ package it.unibo.cfsm
 
 import scala.language.implicitConversions
 
+/** Represents a transition to a state `S` with an associated priority.
+  *
+  * @param state
+  *   the target state
+  * @param priority
+  *   the priority of the transition
+  * @tparam S
+  *   the type of the state
+  */
 case class Next[+S: Ordering](state: S, priority: Double) {
   override def toString: String =
     s"($state, $renderNumber"
