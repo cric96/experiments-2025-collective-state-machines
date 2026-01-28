@@ -58,8 +58,8 @@ class CaseStudy
 
   private def handleWandering(): Next[MovementState] = {
     import CaseStudy._
-    val velocity = explore(bottom, top, maxVelocity = 1.0)
     val leader = S(Double.PositiveInfinity, nbrRange)
+    val velocity = repeatedlyWanderingOnCornersAndCenter(leader)
     val leaderVelocity = alignWithLeader(leader, velocity)
     val computedVelocity = rep(Point3D.Zero) { velocity =>
       val separationForce = computeSeparationForce(Math.min(visionRange * 0.75, SEPARATION_RADIUS))
@@ -160,6 +160,35 @@ class CaseStudy
         Point3D.Zero
       }
     }
+  }
+
+  def repeatedlyWanderingOnCornersAndCenter(leader: Boolean): Point3D = {
+    val bottomLeft = Point3D(0, -bound, 0.0)
+    val topRight = Point3D(bound * 2, bound, 0.0)
+    val center = Point3D(bound, 0.0, 0.0)
+    val bottomRight = Point3D(bound * 2, -bound, 0.0)
+    val topLeft = Point3D(0, bound, 0.0)
+    val waypoints = List(
+      bottomLeft, // Start bottom-left corner
+      bottomRight, // Move to bottom-right
+      topRight, // Move to top-right
+      topLeft, // Move to top-left
+      Point3D(bound * 0.5, -bound * 0.5, 0.0), // Inner layer bottom-left
+      Point3D(bound * 1.5, -bound * 0.5, 0.0), // Inner layer bottom-right
+      Point3D(bound * 1.5, bound * 0.5, 0.0), // Inner layer top-right
+      Point3D(bound * 0.5, bound * 0.5, 0.0), // Inner layer top-left
+      center // End at center
+    )
+    val (goalPosition, _) = rep((waypoints.head, 0)) { case (currentGoal, currentIndex) =>
+      val arrived = isClose(currentGoal, 0.5)
+      val nextIndex = mux(arrived) {
+        (currentIndex + 1) % waypoints.size
+      } {
+        currentIndex
+      }
+      (waypoints(nextIndex), nextIndex)
+    }
+    goto(goalPosition)
   }
 
   /** Smoothly blends previous velocity with target velocity */
