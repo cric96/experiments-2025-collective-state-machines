@@ -59,10 +59,10 @@ class CaseStudy
   private def handleWandering(): Next[MovementState] = {
     import CaseStudy._
     val leader = S(Double.PositiveInfinity, nbrRange)
-    val velocity = repeatedlyWanderingOnCornersAndCenter(leader)
+    val velocity = repeatedlyWanderingOnCornersAndCenter(leader) / 2.0
     val leaderVelocity = alignWithLeader(leader, velocity)
     val computedVelocity = rep(Point3D.Zero) { velocity =>
-      val separationForce = computeSeparationForce(Math.min(visionRange * 0.75, SEPARATION_RADIUS))
+      val separationForce = computeSeparationForce(Math.min(visionRange * 0.5, SEPARATION_RADIUS))
       val toLeader = sinkAt(leader)
       val alignmentForce = leaderVelocity.normalize
       val targetVel = (separationForce * SEPARATION_WEIGHT
@@ -179,6 +179,13 @@ class CaseStudy
       Point3D(bound * 0.5, bound * 0.5, 0.0), // Inner layer top-left
       center // End at center
     )
+    val velocityEstimation = rep(Point3D.Zero) { oldPosition =>
+      val target = currentPosition()
+      val velocity = target - oldPosition
+      val timePassed = deltaTime().toSeconds
+      //println(s"Estimated velocity: ${(velocity / timePassed).module}")
+      target
+    }
     val (goalPosition, _) = rep((waypoints.head, 0)) { case (currentGoal, currentIndex) =>
       val arrived = isClose(currentGoal, 0.5)
       val nextIndex = mux(arrived) {
@@ -198,7 +205,7 @@ class CaseStudy
 
 object CaseStudy {
   // Separation behavior constants
-  val SEPARATION_RADIUS: Double = 12.5
+  val SEPARATION_RADIUS: Double = 5
   val SEPARATION_RADIUS_SOLVING: Double = 2.0
   val MIN_DISTANCE: Double = 0.5
   val VECTOR_MODULE_THRESHOLD: Double = 0.01

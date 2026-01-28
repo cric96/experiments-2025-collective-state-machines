@@ -41,8 +41,9 @@ class SpawnDanger[T, P <: Position[P]](
 
   override protected def executeBeforeUpdateDistribution(): Unit = {
     if (!anyProblemUnsolved) {
-      val x = (randomGenerator.nextDouble() * sideLength) + baseRadius
-      val y = randomGenerator.nextDouble() * sideLength - sideLength / 2
+      val halfSize = sideLength / 2
+      val x = (randomGenerator.nextDouble() * halfSize) + baseRadius
+      val y = randomGenerator.nextDouble() * halfSize - halfSize / 2
       val problemPosition = Array(x, y)
       val dangerPosition = environment.makePosition(problemPosition)
       val dangerNode = new GenericNode(environment.getIncarnation, environment)

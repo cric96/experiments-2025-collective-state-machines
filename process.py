@@ -1115,21 +1115,21 @@ def plot_states_by_variability(means_data, connection_range_percentage, stdevs_d
 # Example usage: plot for specific connection_range and variability
 plot_states_by_history(means["simulation"], connection_range_percentage=0.2, variability=10.0, stdevs_data=None, show_legend=False)
 # Example usage: plot for specific connection_range and variability
-plot_states_by_history(means["simulation"], connection_range_percentage=0.3, variability=10.0, stdevs_data=None, show_legend=False)
+plot_states_by_history(means["simulation"], connection_range_percentage=0.15000000000000002, variability=10.0, stdevs_data=None, show_legend=False)
 # Example usage: plot for specific connection_range and variability
-plot_states_by_history(means["simulation"], connection_range_percentage=0.2, variability=10.0, stdevs_data=None, show_legend=False)
+plot_states_by_history(means["simulation"], connection_range_percentage=0.15000000000000002, variability=10.0, stdevs_data=None, show_legend=False)
 
 # Example usage: plot without legend
-plot_states_by_history(means["simulation"], connection_range_percentage=0.3, variability=10.0, stdevs_data=None, show_legend=False)
+plot_states_by_history(means["simulation"], connection_range_percentage=0.2, variability=10.0, stdevs_data=None, show_legend=False)
 
 # Example usage: create standalone legend
 plot_legend_only_for_history(means["simulation"], connection_range_percentage=0.2, variability=10.0)
 
 # Example usage: plot comparing variabilities (first 4 state vars)
-plot_states_by_variability(means["simulation"], connection_range_percentage=0.3, stdevs_data=None, state_vars_to_show=4)
+plot_states_by_variability(means["simulation"], connection_range_percentage=0.2, stdevs_data=None, state_vars_to_show=4)
 
 # Example usage: plot disagreement rate as bar chart for all configurations
 plot_disagreement_bar_chart(means["simulation"])
 
 # Example usage: plot only Weibull frequency distributions
-plot_weibull_frequencies_only(means["simulation"], connection_range_percentage=0.3)
+plot_weibull_frequencies_only(means["simulation"], connection_range_percentage=0.2)
