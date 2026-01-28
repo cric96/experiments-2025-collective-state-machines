@@ -792,6 +792,8 @@ def plot_states_by_history(means_data, connection_range_percentage, variability,
     time = ds["time"].values
 
     def fmt_history(h: float) -> str:
+        if h == 6000:
+            return "∞"
         return str(int(h)) if float(h).is_integer() else f"{h:g}"
 
     # distinct colors per history
@@ -851,7 +853,7 @@ def plot_states_by_history(means_data, connection_range_percentage, variability,
 
     # single global legend: histories + overlays (if any)
     history_handles = [
-        Line2D([0], [0], color=colors[h], lw=1.2, label=f"history_length={fmt_history(h)}")
+        Line2D([0], [0], color=colors[h], lw=1.2, label=f"H={fmt_history(h)}")
         for h in histories
     ]
     overlay_handles = []
@@ -912,6 +914,8 @@ def plot_legend_only_for_history(means_data, connection_range_percentage, variab
     histories = np.asarray(ds["history_length"].values, dtype=float)
     
     def fmt_history(h: float) -> str:
+        if h == 6000:
+            return "∞"
         return str(int(h)) if float(h).is_integer() else f"{h:g}"
     
     # distinct colors per history
@@ -928,7 +932,7 @@ def plot_legend_only_for_history(means_data, connection_range_percentage, variab
     
     # Create legend handles
     history_handles = [
-        Line2D([0], [0], color=colors[h], lw=1.2, label=f"history_length={fmt_history(h)}")
+        Line2D([0], [0], color=colors[h], lw=1.2, label=f"H={fmt_history(h)}")
         for h in histories
     ]
     overlay_handles = []
@@ -1109,20 +1113,20 @@ def plot_states_by_variability(means_data, connection_range_percentage, stdevs_d
 
 
 # Example usage: plot for specific connection_range and variability
-plot_states_by_history(means["simulation"], connection_range_percentage=0.2, variability=10.0, stdevs_data=stdevs["simulation"], show_legend=False)
+plot_states_by_history(means["simulation"], connection_range_percentage=0.2, variability=10.0, stdevs_data=None, show_legend=False)
 # Example usage: plot for specific connection_range and variability
-plot_states_by_history(means["simulation"], connection_range_percentage=0.3, variability=10.0, stdevs_data=stdevs["simulation"], show_legend=False)
+plot_states_by_history(means["simulation"], connection_range_percentage=0.3, variability=10.0, stdevs_data=None, show_legend=False)
 # Example usage: plot for specific connection_range and variability
-plot_states_by_history(means["simulation"], connection_range_percentage=0.15, variability=10.0, stdevs_data=stdevs["simulation"], show_legend=False)
+plot_states_by_history(means["simulation"], connection_range_percentage=0.2, variability=10.0, stdevs_data=None, show_legend=False)
 
 # Example usage: plot without legend
-plot_states_by_history(means["simulation"], connection_range_percentage=0.2, variability=10.0, stdevs_data=stdevs["simulation"], show_legend=False)
+plot_states_by_history(means["simulation"], connection_range_percentage=0.3, variability=10.0, stdevs_data=None, show_legend=False)
 
 # Example usage: create standalone legend
 plot_legend_only_for_history(means["simulation"], connection_range_percentage=0.2, variability=10.0)
 
 # Example usage: plot comparing variabilities (first 4 state vars)
-plot_states_by_variability(means["simulation"], connection_range_percentage=0.3, stdevs_data=stdevs["simulation"], state_vars_to_show=4)
+plot_states_by_variability(means["simulation"], connection_range_percentage=0.3, stdevs_data=None, state_vars_to_show=4)
 
 # Example usage: plot disagreement rate as bar chart for all configurations
 plot_disagreement_bar_chart(means["simulation"])
