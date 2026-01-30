@@ -19,6 +19,8 @@ class Alarm[T, P <: Position[P]](
 ) extends AbstractGlobalReaction[T, P](environment, distribution) {
   private lazy val base = nodes.filter(_.contains(MoleculeConstants.IS_BASE)).head
 
-  override protected def executeBeforeUpdateDistribution(): Unit =
+  override protected def executeBeforeUpdateDistribution(): Unit = {
+    println("Alarm triggered!" + environment.getSimulation.getTime)
     base.setConcentration(MoleculeConstants.IS_ALARM, true.asInstanceOf[T])
+  }
 }

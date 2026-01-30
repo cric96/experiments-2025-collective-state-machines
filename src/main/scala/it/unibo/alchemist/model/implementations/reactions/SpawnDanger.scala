@@ -40,6 +40,7 @@ class SpawnDanger[T, P <: Position[P]](
   lazy val base = nodes.filter(_.contains(MoleculeConstants.IS_BASE)).head
 
   override protected def executeBeforeUpdateDistribution(): Unit = {
+    println("SpawnDanger triggered!" + environment.getSimulation.getTime)
     if (!anyProblemUnsolved) {
       val halfSize = sideLength / 2
       val x = (randomGenerator.nextDouble() * halfSize) + baseRadius

@@ -179,13 +179,6 @@ class CaseStudy
       Point3D(bound * 0.5, bound * 0.5, 0.0), // Inner layer top-left
       center // End at center
     )
-    val velocityEstimation = rep(Point3D.Zero) { oldPosition =>
-      val target = currentPosition()
-      val velocity = target - oldPosition
-      val timePassed = deltaTime().toSeconds
-      //println(s"Estimated velocity: ${(velocity / timePassed).module}")
-      target
-    }
     val (goalPosition, _) = rep((waypoints.head, 0)) { case (currentGoal, currentIndex) =>
       val arrived = isClose(currentGoal, 0.5)
       val nextIndex = mux(arrived) {
@@ -196,6 +189,7 @@ class CaseStudy
       (waypoints(nextIndex), nextIndex)
     }
     goto(goalPosition)
+    explore(bottomLeft, topRight, maxVelocity = 1.0)
   }
 
   /** Smoothly blends previous velocity with target velocity */

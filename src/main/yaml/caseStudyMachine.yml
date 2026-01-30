@@ -51,17 +51,17 @@ environment:
   global-programs:
     - time-distribution:
         type: DiracComb
-        parameters: [ 1200, 0.000714 ]
+        parameters: [ 1200, 0.000833 ]
       type: SpawnDanger
       parameters: [ *side_length, 10.0, *drones, *base_vision_range ]
     - time-distribution:
         type: DiracComb
-        parameters: [ 2400, 0.000357 ]
+        parameters: [ 2400, 0.000416 ]
       type: BaseInAttack
       parameters: [ ]
     - time-distribution:
         type: DiracComb
-        parameters: [ 600, 0.000714 ]
+        parameters: [ 900, 0.000833 ]
       type: Alarm
       parameters: [ ]
 
