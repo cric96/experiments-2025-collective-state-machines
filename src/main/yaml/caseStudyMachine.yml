@@ -61,7 +61,7 @@ environment:
       parameters: [ ]
     - time-distribution:
         type: DiracComb
-        parameters: [ 900, 0.000833 ]
+        parameters: [ 1100, 0.000833 ]
       type: Alarm
       parameters: [ ]
 
