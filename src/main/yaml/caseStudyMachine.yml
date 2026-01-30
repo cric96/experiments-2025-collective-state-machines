@@ -176,4 +176,4 @@ export:
 
 terminate:
   type: AfterTime
-  parameters: 4000
+  parameters: 4600
