@@ -84,7 +84,7 @@ class CaseStudy
     if (anyAlarm) {
       Wandering()
     } else if (baseAttacked) {
-      Defending()
+      Defending() --> Double.PositiveInfinity
     } else {
       val velocity = goto(basePosition, maxVelocity = 0.1)
       Wait().updateVelocity(velocity)
