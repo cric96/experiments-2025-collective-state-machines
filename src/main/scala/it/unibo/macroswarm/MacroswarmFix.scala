@@ -6,8 +6,7 @@ import it.unibo.scafi.macroswarm.MacroSwarmAlchemistSupport.{BaseMovementLib, Bl
 import it.unibo.scafi.space.Point3D
 import it.unibo.scafi.space.pimp._
 trait MacroswarmFix {
-  self:
-    AggregateProgram with StandardSensors with TimeUtils
+  self: AggregateProgram with StandardSensors with TimeUtils
     with PatternFormationLib with BlocksWithShare with BlocksWithGC
     with ProcessFix with CustomSpawn with BaseMovementLib
     with FlockLib with ScafiAlchemistSupport with GPSMovement
