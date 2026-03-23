@@ -65,6 +65,12 @@ To launch a single run with the graphical visualisation:
 To generate the plots from the experimental data, run:
 
 ```bash
-# TODO: add the chart generation command here
+docker compose up charts
 ```
 
+Or you can use python (but we suggest to use a virtual environment):
+
+```bash
+pip install -r requirements.txt
+python process.py
+```
