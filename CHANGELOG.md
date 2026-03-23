@@ -1,3 +1,47 @@
+## 1.0.0 (2026-03-23)
+
+### Features
+
+* add at least N machine ([31c7662](https://github.com/cric96/experiments-2025-collective-state-machines/commit/31c7662dea650a4ebacc8d42d1ffc0b3003bc7ec))
+* add example of branching and then merging histories ([ecbc981](https://github.com/cric96/experiments-2025-collective-state-machines/commit/ecbc9813edee48e1dd3dbc99572f060fc1c99960))
+* add movement example with state with both global and local information ([1215de6](https://github.com/cric96/experiments-2025-collective-state-machines/commit/1215de6ef2038bb4ad0e094bbefee206de328573))
+* draft first case study ([397f133](https://github.com/cric96/experiments-2025-collective-state-machines/commit/397f13386f7536eae4fc45aea748722e0fe09165))
+* first version of fsm, need more checks ([a2da9f7](https://github.com/cric96/experiments-2025-collective-state-machines/commit/a2da9f7efd150696f945212c838e910fe1080931))
+* first working version of the collective state machine ([f68116b](https://github.com/cric96/experiments-2025-collective-state-machines/commit/f68116b76ce321686664acf8e5460a649f389e8f))
+* setup scafi al runtime ([eb299b6](https://github.com/cric96/experiments-2025-collective-state-machines/commit/eb299b6f70df70d162cac39fbf7a34879094edfa))
+* working on case study, add simple state machine and some important utils for spawning problems ([6376ea8](https://github.com/cric96/experiments-2025-collective-state-machines/commit/6376ea8a4ebf27c1f8faadf21cbe1745d2f82cb9))
+
+### Dependency updates
+
+* **deps:** update alchemist to v42.3.33 ([#37](https://github.com/cric96/experiments-2025-collective-state-machines/issues/37)) ([2234064](https://github.com/cric96/experiments-2025-collective-state-machines/commit/2234064eee0f98804fe4c9297fabb028aa69086e))
+
+### Bug Fixes
+
+* change searching strategy ([3831a88](https://github.com/cric96/experiments-2025-collective-state-machines/commit/3831a88dbaef5dea2a0db30a57cbc2d16bb0a87b))
+* problem about self-looping ([021210b](https://github.com/cric96/experiments-2025-collective-state-machines/commit/021210bfeff440228344a1cb62d9bfb541eb9d12))
+* update effect for movement ([8d9bbb3](https://github.com/cric96/experiments-2025-collective-state-machines/commit/8d9bbb3fb23f3acb6914c64c054cfb762897f854))
+
+### Documentation
+
+* add explanation of at least n ([74ba624](https://github.com/cric96/experiments-2025-collective-state-machines/commit/74ba624080653343cf15a17519b7224795f83383))
+* more information for the experiment 3 ([9404de7](https://github.com/cric96/experiments-2025-collective-state-machines/commit/9404de796ce8ca5a660838f5aff1190fa826374f))
+
+### General maintenance
+
+* add scalafmt configuration ([22f17b4](https://github.com/cric96/experiments-2025-collective-state-machines/commit/22f17b49a3c9db89c69c64310e4f96fc17655b7a))
+* better description of the state machines, add description of the examples ([6d2148d](https://github.com/cric96/experiments-2025-collective-state-machines/commit/6d2148dca38e03204cfba4e2eecd04ace9d54acf))
+* more on README, minor on python version ([ef5c86c](https://github.com/cric96/experiments-2025-collective-state-machines/commit/ef5c86cbc73f7a8b14bd3814e4bd9b8b58a03ffc))
+* move to share instead of rep + nbr ([e11089d](https://github.com/cric96/experiments-2025-collective-state-machines/commit/e11089db755b6ee6e65b8831c2085dfa51b676ee))
+* update requirements ([80f6be5](https://github.com/cric96/experiments-2025-collective-state-machines/commit/80f6be527cda5126373a300415e8341c6ac3bb72))
+* update the dependecies ([c1dcaf0](https://github.com/cric96/experiments-2025-collective-state-machines/commit/c1dcaf0eeb409ab06c0990173aa0812df62864bf))
+
+### Refactoring
+
+* change State to Next ([f8da0d9](https://github.com/cric96/experiments-2025-collective-state-machines/commit/f8da0d96c3673b9578b691414d10bd3786ec0f16))
+* clean core of fsm method ([7b9cd4d](https://github.com/cric96/experiments-2025-collective-state-machines/commit/7b9cd4da48073c7c0df663e7aedd2747d03ec82d))
+* compact version of fsm ([6893984](https://github.com/cric96/experiments-2025-collective-state-machines/commit/68939844e33d7594fbc68aa0506ed593db0f721e))
+* from FSM to CollectiveFSM ([e5ff2e8](https://github.com/cric96/experiments-2025-collective-state-machines/commit/e5ff2e8c340d0e0305828ac2b2a2b48ef6d57946))
+
 ## [1.2.1](https://github.com/DanySK/alchemist-experiments-bootstrap/compare/1.2.0...1.2.1) (2024-02-09)
 
 
