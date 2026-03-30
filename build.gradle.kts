@@ -11,7 +11,7 @@ plugins {
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
     implementation(libs.bundles.alchemist)
-    implementation("it.unibo.scafi:macro-swarm-alchemist_2.13:1.5.3")
+    implementation("it.unibo.scafi:macro-swarm-alchemist_2.13:1.5.5")
     testImplementation("org.scalatest:scalatest_3:3.2.19")
     testRuntimeOnly("org.junit.platform:junit-platform-engine:1.13.1")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher:1.13.1")
