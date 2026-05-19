@@ -15,10 +15,9 @@ variables:
   history_length: &history_length
     type: ArbitraryVariable
     parameters: [ 6000, [1200, 6000] ]
-  #drones: &drones
-  #  type: LinearVariable
-  #  parameters: [ 40, 20, 40, 5 ]
-  drones: &drones 40
+  drones: &drones
+    type: ArbitraryVariable
+    parameters: [ 40, [40, 80, 160] ]
 
   side_length: &side_length
     formula: 50.0
@@ -39,7 +38,7 @@ launcher:
   parameters:
     batch:
       - seed
-      #- drones
+      - drones
       - connection_range_percentage
       - history_length
       - variability

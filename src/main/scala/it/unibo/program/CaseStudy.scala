@@ -176,7 +176,7 @@ class CaseStudy
 object CaseStudy {
   // Separation behavior constants
   val SEPARATION_RADIUS: Double = 5
-  val SEPARATION_RADIUS_SOLVING: Double = 2.0
+  val SEPARATION_RADIUS_SOLVING: Double = 1.0
   val MIN_DISTANCE: Double = 0.5
   val VECTOR_MODULE_THRESHOLD: Double = 0.01
   // Force weighting constants
